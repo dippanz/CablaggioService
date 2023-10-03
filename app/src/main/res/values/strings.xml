@@ -1,0 +1,227 @@
+<resources>
+    <string name="app_name">CablaggioService</string>
+    <string name="batteria_1">1 Tom 1 Timpano</string>
+    <string name="batteria_2">2 Tom 1 Timpano</string>
+    <string name="batteria_3">1 Tom 2 Timpano</string>
+    <string name="batteria_4">2 Tom 2 Timpano</string>
+    <string name="batteria">Batteria</string>
+    <string name="basso">Basso</string>
+    <string name="percussioni">Percussioni</string>
+    <string name="tastiera">Tastiera</string>
+    <string name="percussioni_1">Percussioni 1</string>
+    <string name="percussioni_2">Percussioni 2</string>
+    <string name="percussioni_3">Percussioni 3</string>
+    <string name="tastiera_1">2 tastiere</string>
+    <string name="tastiera_2">tastiera + seq</string>
+    <string name="tastiera_3">tastiera + seq + click</string>
+    <string name="tastiera_4">2 tastiere + seq</string>
+    <string name="tastiera_5">2 tastiere + seq + click</string>
+    <string name="tastiera_6">2 tastiere + piano</string>
+    <string name="tastiera_7">tastiere + seq + piano</string>
+    <string name="tastiera_8">tastiere + seq + click + piano</string>
+    <string name="tastiera_9">2 tastiere + seq + piano</string>
+    <string name="tastiera_10">2 tastiere + seq + click + piano</string>
+    <string name="chitarra">Chitarra</string>
+    <string name="sax">Sax</string>
+    <string name="voci">Voci</string>
+    <string name="cori">Cori</string>
+    <string name="image">image</string>
+    <string name="canali">CANALI</string>
+    <string name="chitarra_1">Chitarra 1</string>
+    <string name="chitarra_2">Chitarra 2</string>
+    <string name="chitarra_3">Chitarra 3</string>
+    <string name="chitarra_4">Chitarra 4</string>
+    <string name="chitarra_5">Chitarra 5</string>
+    <string name="chitarra_6">Chitarra 6</string>
+    <string name="carica_canali">Carica canali</string>
+    <string name="voci_1">Voci 1</string>
+    <string name="voci_2">Voci 2</string>
+    <string name="voci_3">Voci 3</string>
+    <string name="cori_1">Cori 1</string>
+    <string name="cori_2">Cori 2</string>
+    <string name="cori_3">Cori 3</string>
+    <string name="inserire_pre_set">Inserire pre-set %1$s</string>
+    <string name="scegliere_pre_set">Scegliere almeno un pre-set %1$s</string>
+    <string name="ok">OK</string>
+    <string name="modifica">Modifica</string>
+    <string name="info_preset">INFO PRESET</string>
+    <string name="info_1s">\t\t\t\t\t\t\t\tINFO %1$s</string>
+    <string name="salva">Salva</string>
+    <string name="annulla">Annulla</string>
+    <string name="aggiungi">Aggiungi</string>
+    <string name="titolo">Titolo</string>
+    <string name="contenuto_scorrevole">contenuto scorrevole</string>
+    <string name="tabulazioni">\t\t</string>
+    <string name="modifica_preset_s_1">Modifica preset: %1$s</string>
+
+
+    <string-array name="batteria1String">
+        <item>Kik</item>
+        <item>Snare</item>
+        <item>Charleston</item>
+        <item>Tom</item>
+        <item>Timpano</item>
+        <item>Over</item>
+        <item>Over</item>
+    </string-array>
+
+    <string-array name="batteria2String">
+        <item>Kik</item>
+        <item>Snare</item>
+        <item>Charleston</item>
+        <item>Tom</item>
+        <item>Tom</item>
+        <item>Timpano</item>
+        <item>Over</item>
+        <item>Over</item>
+    </string-array>
+
+    <string-array name="batteria3String">
+        <item>Kik</item>
+        <item>Snare</item>
+        <item>Charleston</item>
+        <item>Tom</item>
+        <item>Timpano</item>
+        <item>Timpano</item>
+        <item>Over</item>
+        <item>Over</item>
+    </string-array>
+
+    <string-array name="batteria4String">
+        <item>Kik</item>
+        <item>Snare</item>
+        <item>Charleston</item>
+        <item>Tom</item>
+        <item>Tom</item>
+        <item>Timpano</item>
+        <item>Timpano</item>
+        <item>Over</item>
+        <item>Over</item>
+    </string-array>
+
+    <string-array name="percussioni1String">
+        <item>Octapad L %D.I.</item>
+        <item>Octapad R %D.I.</item>
+        <item>Over %MIC</item>
+        <item>Over R (Roto toms) %MIC</item>
+        <item>Rullante %MIC</item>
+        <item>Tom %MIC</item>
+        <item>Timpano %MIC</item>
+        <item>Timpano %MIC</item>
+    </string-array>
+
+    <string-array name="tastiera1String">
+        <item>Key L %MIC</item>
+        <item>Key R %MIC</item>
+        <item>Key L %MIC</item>
+        <item>Key R %MIC</item>
+    </string-array>
+
+    <string-array name="tastiera2String">
+        <item>Key L %MIC</item>
+        <item>Key R %MIC</item>
+        <item>Sequenze %MIC</item>
+        <item>Sequenze %MIC</item>
+    </string-array>
+
+    <string-array name="tastiera3String">
+        <item>Key L %MIC</item>
+        <item>Key R %MIC</item>
+        <item>Sequenze %MIC</item>
+        <item>Sequenze %MIC</item>
+        <item>Click %MIC</item>
+        <item>Click %MIC</item>
+    </string-array>
+
+    <string-array name="tastiera4String">
+        <item>Key L %MIC</item>
+        <item>Key R %MIC</item>
+        <item>Key L %MIC</item>
+        <item>Key R %MIC</item>
+        <item>Sequenze %MIC</item>
+        <item>Sequenze %MIC</item>
+    </string-array>
+
+    <string-array name="tastiera5String">
+        <item>Key L %MIC</item>
+        <item>Key R %MIC</item>
+        <item>Key L %MIC</item>
+        <item>Key  %MIC</item>
+        <item>Sequenze %MIC</item>
+        <item>Sequenze %MIC</item>
+        <item>Click %MIC</item>
+        <item>Click %MIC</item>
+    </string-array>
+
+    <string-array name="tastiera6String">
+        <item>Key L %MIC</item>
+        <item>Key R %MIC</item>
+        <item>Key L %MIC</item>
+        <item>Key R %MIC</item>
+        <item>Piano L %MIC</item>
+        <item>Piano R %MIC</item>
+    </string-array>
+
+    <string-array name="tastiera7String">
+        <item>Key L %MIC</item>
+        <item>Key R %MIC</item>
+        <item>Sequenze %MIC</item>
+        <item>Sequenze %MIC</item>
+        <item>Piano L %MIC</item>
+        <item>Piano R %MIC</item>
+    </string-array>
+
+    <string-array name="tastiera8String">
+        <item>Key L %MIC</item>
+        <item>Key R %MIC</item>
+        <item>Sequenze %MIC</item>
+        <item>Sequenze %MIC</item>
+        <item>Click %MIC</item>
+        <item>Click %MIC</item>
+        <item>Piano L %MIC</item>
+        <item>Piano R %MIC</item>
+    </string-array>
+
+    <string-array name="tastiera9String">
+        <item>Key L %MIC</item>
+        <item>Key R %MIC</item>
+        <item>Key L %MIC</item>
+        <item>Key R %MIC</item>
+        <item>Sequenze %MIC</item>
+        <item>Sequenze %MIC</item>
+        <item>Piano L %MIC</item>
+        <item>Piano R %MIC</item>
+    </string-array>
+
+    <string-array name="tastiera10String">
+        <item>Key L %MIC</item>
+        <item>Key R %MIC</item>
+        <item>Key L %MIC</item>
+        <item>Key  %MIC</item>
+        <item>Sequenze %MIC</item>
+        <item>Sequenze %MIC</item>
+        <item>Click %MIC</item>
+        <item>Click %MIC</item>
+        <item>Piano L %MIC</item>
+        <item>Piano R %MIC</item>
+    </string-array>
+
+    <string-array name="chitarra1String">
+        <item>El Gtr josh %MIC</item>
+        <item>El Gtr Nick %MIC</item>
+    </string-array>
+
+    <string-array name="voci1String">
+        <item>Fulvio</item>
+        <item>Joshua</item>
+        <item>Nick</item>
+    </string-array>
+
+
+    <string-array name="cori1String">
+        <item>Floriana</item>
+        <item>Anna</item>
+        <item>Roberta</item>
+    </string-array>
+
+</resources>

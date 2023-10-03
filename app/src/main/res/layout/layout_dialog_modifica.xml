@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="8dp">
+
+        <!-- Titolo -->
+        <EditText
+            android:id="@+id/textViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/titolo"
+            android:labelFor="@id/container_editText"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:padding="5dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:autofillHints="true"
+            android:inputType="textAutoComplete"
+            android:backgroundTint="@android:color/transparent"/>
+
+        <ScrollView
+            android:id="@+id/parent_container"
+            android:contentDescription="@string/contenuto_scorrevole"
+            android:layout_width="290dp"
+            android:layout_margin="5dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewTitle"
+            android:layout_centerHorizontal="true">
+
+
+                <LinearLayout
+                    android:id="@+id/container_editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:orientation="vertical" />
+
+
+
+
+
+        </ScrollView>
+
+        <!-- Gruppo di Bottoni -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/parent_container"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp">
+
+                <!-- Primo Bottone -->
+                <Button
+                    android:background="@android:color/transparent"
+                    android:textSize="14sp"
+                    android:textColor="@color/custom_button_background_color"
+                    android:id="@+id/buttonSalva"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/salva"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp" />
+
+                <!-- Terzo Bottone (Centrale) -->
+                <Button
+                    android:background="@android:color/transparent"
+                    android:textSize="14sp"
+                    android:textColor="@color/custom_button_background_color"
+                    android:id="@+id/buttonAggiungi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/aggiungi"
+                    android:layout_weight="1" />
+
+                <!-- Secondo Bottone -->
+                <Button
+                    android:background="@android:color/transparent"
+                    android:textColor="@color/custom_button_background_color"
+                    android:id="@+id/buttonAnnulla"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/annulla"
+                    android:textSize="14sp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp" />
+        </LinearLayout>
+</RelativeLayout>
+

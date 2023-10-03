@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container_frag_sezioni"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <ImageButton
+            android:id="@+id/imageButtonCori"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@color/trasparente"
+            android:contentDescription="@string/image"
+            app:layout_constraintStart_toEndOf="@+id/checkBoxCori"
+            app:layout_constraintTop_toTopOf="@+id/checkBoxCori"
+            app:srcCompat="@drawable/baseline_arrow_right_48" />
+
+        <ImageButton
+            android:id="@+id/imageButtonVoci"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@color/trasparente"
+            android:contentDescription="@string/image"
+            app:layout_constraintStart_toEndOf="@+id/checkBoxVoci"
+            app:layout_constraintTop_toTopOf="@+id/checkBoxVoci"
+            app:srcCompat="@drawable/baseline_arrow_right_48" />
+
+        <ImageButton
+            android:id="@+id/imageButtonChitarra"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@color/trasparente"
+            android:contentDescription="@string/image"
+            app:layout_constraintStart_toEndOf="@+id/checkboxChitarra"
+            app:layout_constraintTop_toTopOf="@+id/checkboxChitarra"
+            app:srcCompat="@drawable/baseline_arrow_right_48" />
+
+        <ImageButton
+            android:contentDescription="@string/image"
+            android:id="@+id/imageButtonTastiera"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@color/trasparente"
+            app:layout_constraintStart_toEndOf="@+id/checkBoxTastiera"
+            app:layout_constraintTop_toTopOf="@+id/checkBoxTastiera"
+            app:srcCompat="@drawable/baseline_arrow_right_48" />
+
+        <ImageButton
+            android:contentDescription="@string/image"
+            android:id="@+id/imageButtonPercussioni"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@color/trasparente"
+            app:layout_constraintStart_toEndOf="@+id/checkBoxPercussioni"
+            app:layout_constraintTop_toTopOf="@+id/checkBoxPercussioni"
+            app:srcCompat="@drawable/baseline_arrow_right_48" />
+
+        <CheckBox
+            android:textStyle="bold"
+            android:id="@+id/checkboxBatteria"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/batteria"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+
+        <CheckBox
+            android:textStyle="bold"
+            android:id="@+id/checkboxChitarra"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="48dp"
+            android:text="@string/chitarra"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/barrier1" />
+
+        <ImageButton
+            android:id="@+id/imageButtonBatteria"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:contentDescription="@string/image"
+            android:background="@color/trasparente"
+            app:layout_constraintStart_toEndOf="@+id/checkboxBatteria"
+            app:layout_constraintTop_toTopOf="@+id/checkboxBatteria"
+            app:srcCompat="@drawable/baseline_arrow_right_48" />
+
+        <CheckBox
+            android:textStyle="bold"
+            android:id="@+id/checkBoxPercussioni"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="80dp"
+            android:text="@string/percussioni"
+            app:layout_constraintStart_toEndOf="@+id/imageButtonBatteria"
+            app:layout_constraintTop_toTopOf="@+id/checkboxBatteria" />
+
+        <CheckBox
+            android:textStyle="bold"
+            android:id="@+id/checkBoxTastiera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="128dp"
+            android:text="@string/tastiera"
+            app:layout_constraintStart_toEndOf="@+id/checkboxChitarra"
+            app:layout_constraintTop_toTopOf="@+id/checkboxChitarra" />
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollViewTastiera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/checkBoxTastiera"
+            app:layout_constraintTop_toBottomOf="@+id/checkBoxTastiera">
+
+            <RadioGroup
+                android:id="@+id/group_tastiera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/tastiera1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tastiera_1" />
+
+                <RadioButton
+                    android:id="@+id/tastiera2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tastiera_2" />
+
+                <RadioButton
+                    android:id="@+id/tastiera3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tastiera_3" />
+
+                <RadioButton
+                    android:id="@+id/tastiera4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tastiera_4" />
+
+                <RadioButton
+                    android:id="@+id/tastiera5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tastiera_5" />
+
+                <RadioButton
+                    android:id="@+id/tastiera6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tastiera_6" />
+
+                <RadioButton
+                    android:id="@+id/tastiera7"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tastiera_7" />
+
+                <RadioButton
+                    android:id="@+id/tastiera8"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tastiera_8" />
+
+                <RadioButton
+                    android:id="@+id/tastiera9"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="@string/tastiera_9" />
+
+                <RadioButton
+                    android:id="@+id/tastiera10"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="@string/tastiera_10" />
+            </RadioGroup>
+        </androidx.core.widget.NestedScrollView>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollViewPercussioni"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:maxHeight="144dp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/checkBoxPercussioni"
+            app:layout_constraintTop_toBottomOf="@+id/checkBoxPercussioni">
+
+            <RadioGroup
+                android:id="@+id/group_percussioni"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/percussioni1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/percussioni_1" />
+
+
+            </RadioGroup>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollViewBatteria"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/checkboxBatteria"
+            app:layout_constraintTop_toBottomOf="@+id/checkboxBatteria">
+
+            <RadioGroup
+                android:id="@+id/group_batteria"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/batteria1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/batteria_1" />
+
+                <RadioButton
+                    android:id="@+id/batteria2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/batteria_2" />
+
+                <RadioButton
+                    android:id="@+id/batteria3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/batteria_3" />
+
+                <RadioButton
+                    android:id="@+id/batteria4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/batteria_4" />
+            </RadioGroup>
+        </androidx.core.widget.NestedScrollView>
+
+        <CheckBox
+            android:textStyle="bold"
+            android:id="@+id/checkBoxCori"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="152dp"
+            android:layout_marginTop="48dp"
+            android:text="@string/cori"
+            app:layout_constraintStart_toEndOf="@+id/checkBoxVoci"
+            app:layout_constraintTop_toBottomOf="@+id/barrier2" />
+
+        <CheckBox
+            android:textStyle="bold"
+            android:id="@+id/checkBoxSax"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/sax"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/checkBoxBasso" />
+
+        <CheckBox
+            android:textStyle="bold"
+            android:id="@+id/checkBoxVoci"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/voci"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/checkBoxCori" />
+
+        <CheckBox
+            android:id="@+id/checkBoxBasso"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="156dp"
+            android:layout_marginTop="48dp"
+            android:text="@string/basso"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@+id/checkBoxSax"
+            app:layout_constraintTop_toBottomOf="@+id/barrier3" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="scrollViewBatteria,scrollViewPercussioni" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="scrollViewTastiera,scrollViewChitarra" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/canali"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollViewChitarra"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/checkboxChitarra"
+            app:layout_constraintTop_toBottomOf="@+id/checkboxChitarra">
+
+            <LinearLayout
+                android:id="@+id/group_check_chitarra"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <CheckBox
+                    android:id="@+id/chitarra1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/chitarra_1" />
+
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="scrollViewVoci,scrollViewCori"
+            app:barrierDirection="bottom" />
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollViewVoci"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/checkBoxVoci"
+            app:layout_constraintTop_toBottomOf="@+id/checkBoxVoci">
+
+
+            <RadioGroup
+                android:id="@+id/group_voci"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <RadioButton
+                    android:id="@+id/voci1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/voci_1" />
+
+            </RadioGroup>
+
+
+        </androidx.core.widget.NestedScrollView>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scrollViewCori"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/checkBoxCori"
+            app:layout_constraintTop_toBottomOf="@+id/checkBoxCori">
+
+            <RadioGroup
+                android:id="@+id/group_cori"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+
+                <RadioButton
+                    android:id="@+id/cori1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cori_1" />
+
+            </RadioGroup>
+        </androidx.core.widget.NestedScrollView>
+
+        <Button
+            android:id="@+id/buttonCaricaCanali"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="8dp"
+            android:text="@string/carica_canali"
+            android:textSize="20sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkBoxBasso" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
