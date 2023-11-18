@@ -33,128 +33,36 @@ class MainActivity : AppCompatActivity() {
             val dbHelper = MyDatabaseHelper(applicationContext)
             val db = dbHelper.writableDatabase
 
-            //do alla funzione i dati che gli servono
-            createAndSetJsonArray(db, R.array.batteria1String, "batteria1String", R.string.batteria_1, R.id.group_batteria)
-            createAndSetJsonArray(
-                db,
-                R.array.batteria2String,
-                "batteria2String",
-                R.string.batteria_2,
-                R.id.group_batteria
-            )
-            createAndSetJsonArray(
-                db,
-                R.array.batteria3String,
-                "batteria3String",
-                R.string.batteria_3,
-                R.id.group_batteria
-            )
-            createAndSetJsonArray(
-                db,
-                R.array.batteria4String,
-                "batteria4String",
-                R.string.batteria_4,
-                R.id.group_batteria
-            )
+            // Batteria
+            createAndSetJsonArray(db, R.array.batteria1String, generatePositiveUniqueId("batteria1"), R.string.batteria_1, R.id.group_batteria)
+            createAndSetJsonArray(db, R.array.batteria2String, generatePositiveUniqueId("batteria2"), R.string.batteria_2, R.id.group_batteria)
+            createAndSetJsonArray(db, R.array.batteria3String, generatePositiveUniqueId("batteria3"), R.string.batteria_3, R.id.group_batteria)
+            createAndSetJsonArray(db, R.array.batteria4String, generatePositiveUniqueId("batteria4"), R.string.batteria_4, R.id.group_batteria)
 
-            createAndSetJsonArray(
-                db,
-                R.array.tastiera1String,
-                "tastiera1String",
-                R.string.tastiera_1,
-                R.id.group_tastiera
-            )
-            createAndSetJsonArray(
-                db,
-                R.array.tastiera2String,
-                "tastiera2String",
-                R.string.tastiera_2,
-                R.id.group_tastiera
-            )
-            createAndSetJsonArray(
-                db,
-                R.array.tastiera3String,
-                "tastiera3String",
-                R.string.tastiera_3,
-                R.id.group_tastiera
-            )
-            createAndSetJsonArray(
-                db,
-                R.array.tastiera4String,
-                "tastiera4String",
-                R.string.tastiera_4,
-                R.id.group_tastiera
-            )
-            createAndSetJsonArray(
-                db,
-                R.array.tastiera5String,
-                "tastiera5String",
-                R.string.tastiera_5,
-                R.id.group_tastiera
-            )
-            createAndSetJsonArray(
-                db,
-                R.array.tastiera6String,
-                "tastiera6String",
-                R.string.tastiera_6,
-                R.id.group_tastiera
-            )
-            createAndSetJsonArray(
-                db,
-                R.array.tastiera7String,
-                "tastiera7String",
-                R.string.tastiera_7,
-                R.id.group_tastiera
-            )
-            createAndSetJsonArray(
-                db,
-                R.array.tastiera8String,
-                "tastiera8String",
-                R.string.tastiera_8,
-                R.id.group_tastiera
-            )
-            createAndSetJsonArray(
-                db,
-                R.array.tastiera9String,
-                "tastiera9String",
-                R.string.tastiera_9,
-                R.id.group_tastiera
-            )
-            createAndSetJsonArray(
-                db,
-                R.array.tastiera10String,
-                "tastiera10String",
-                R.string.tastiera_10,
-                R.id.group_tastiera
-            )
-            createAndSetJsonArray(
-                db,
-                R.array.percussioni1String,
-                "percussioni1String",
-                R.string.percussioni_1,
-                R.id.group_percussioni
-            )
-            createAndSetJsonArray(
-                db,
-                R.array.chitarra1String,
-                "chitarra1String",
-                R.string.chitarra_1,
-                R.id.group_check_chitarra
-            )
-            createAndSetJsonArray(
-                db,
-                R.array.voci1String,
-                "voci1String",
-                R.string.voci_1,
-                R.id.group_voci
-            )
-            createAndSetJsonArray(
-                db,
-                R.array.cori1String,
-                "cori1String",
-                R.string.cori_1,
-                R.id.group_cori
-            )
+            // Tastiera
+            createAndSetJsonArray(db, R.array.tastiera1String, generatePositiveUniqueId("tastiera1"), R.string.tastiera_1, R.id.group_tastiera)
+            createAndSetJsonArray(db, R.array.tastiera2String, generatePositiveUniqueId("tastiera2"), R.string.tastiera_2, R.id.group_tastiera)
+            createAndSetJsonArray(db, R.array.tastiera3String, generatePositiveUniqueId("tastiera3"), R.string.tastiera_3, R.id.group_tastiera)
+            createAndSetJsonArray(db, R.array.tastiera4String, generatePositiveUniqueId("tastiera4"), R.string.tastiera_4, R.id.group_tastiera)
+            createAndSetJsonArray(db, R.array.tastiera5String, generatePositiveUniqueId("tastiera5"), R.string.tastiera_5, R.id.group_tastiera)
+            createAndSetJsonArray(db, R.array.tastiera6String, generatePositiveUniqueId("tastiera6"), R.string.tastiera_6, R.id.group_tastiera)
+            createAndSetJsonArray(db, R.array.tastiera7String, generatePositiveUniqueId("tastiera7"), R.string.tastiera_7, R.id.group_tastiera)
+            createAndSetJsonArray(db, R.array.tastiera8String, generatePositiveUniqueId("tastiera8"), R.string.tastiera_8, R.id.group_tastiera)
+            createAndSetJsonArray(db, R.array.tastiera9String, generatePositiveUniqueId("tastiera9"), R.string.tastiera_9, R.id.group_tastiera)
+            createAndSetJsonArray(db, R.array.tastiera10String, generatePositiveUniqueId("tastiera10"), R.string.tastiera_10, R.id.group_tastiera)
+
+            // Percussioni
+            createAndSetJsonArray(db, R.array.percussioni1String, generatePositiveUniqueId("percussioni1"), R.string.percussioni_1, R.id.group_percussioni)
+
+            // Chitarra
+            createAndSetJsonArray(db, R.array.chitarra1String, generatePositiveUniqueId("chitarra1"), R.string.chitarra_1, R.id.group_check_chitarra)
+
+            // Voci
+            createAndSetJsonArray(db, R.array.voci1String, generatePositiveUniqueId("voci1"), R.string.voci_1, R.id.group_voci)
+
+            // Cori
+            createAndSetJsonArray(db, R.array.cori1String, generatePositiveUniqueId("cori1"), R.string.cori_1, R.id.group_cori)
+
 
             Log.i("msg", "applico dati iniziali predefiniti")
 
@@ -165,19 +73,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun generatePositiveUniqueId(input: String): Int {
+        val hashCode = input.hashCode()
+        // Assicura che il valore sia positivo
+        return hashCode and 0x7FFFFFFF
+    }
+
+
     private fun createAndSetJsonArray(
         db: SQLiteDatabase,
         @ArrayRes redId: Int,
-        key: String,
+        @IdRes key: Int,
         @StringRes nomePreset: Int,
         @IdRes nomeGroup: Int
     ) {
-        val pattern = Regex(".*?\\d+String")
-
-        if (!pattern.matches(key)) {
-           throw IllegalArgumentException("$key non segue il pattern di chiave predefinito")
-        }
-
         val stringArray = resources.getStringArray(redId).toList()
 
         //converto stringArray in jsonString per salvare l'intero array

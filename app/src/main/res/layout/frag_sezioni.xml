@@ -129,67 +129,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <RadioButton
-                    android:id="@+id/tastiera1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tastiera_1" />
-
-                <RadioButton
-                    android:id="@+id/tastiera2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tastiera_2" />
-
-                <RadioButton
-                    android:id="@+id/tastiera3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tastiera_3" />
-
-                <RadioButton
-                    android:id="@+id/tastiera4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tastiera_4" />
-
-                <RadioButton
-                    android:id="@+id/tastiera5"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tastiera_5" />
-
-                <RadioButton
-                    android:id="@+id/tastiera6"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tastiera_6" />
-
-                <RadioButton
-                    android:id="@+id/tastiera7"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tastiera_7" />
-
-                <RadioButton
-                    android:id="@+id/tastiera8"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tastiera_8" />
-
-                <RadioButton
-                    android:id="@+id/tastiera9"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
-                    android:text="@string/tastiera_9" />
-
-                <RadioButton
-                    android:id="@+id/tastiera10"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
-                    android:text="@string/tastiera_10" />
             </RadioGroup>
         </androidx.core.widget.NestedScrollView>
 
@@ -209,13 +148,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <RadioButton
-                    android:id="@+id/percussioni1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/percussioni_1" />
-
-
             </RadioGroup>
 
         </androidx.core.widget.NestedScrollView>
@@ -234,30 +166,6 @@
                 android:id="@+id/group_batteria"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-
-                <RadioButton
-                    android:id="@+id/batteria1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/batteria_1" />
-
-                <RadioButton
-                    android:id="@+id/batteria2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/batteria_2" />
-
-                <RadioButton
-                    android:id="@+id/batteria3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/batteria_3" />
-
-                <RadioButton
-                    android:id="@+id/batteria4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/batteria_4" />
             </RadioGroup>
         </androidx.core.widget.NestedScrollView>
 
@@ -345,13 +253,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <CheckBox
-                    android:id="@+id/chitarra1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/chitarra_1" />
-
-
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
 
@@ -377,12 +278,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <RadioButton
-                    android:id="@+id/voci1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/voci_1" />
-
             </RadioGroup>
 
 
@@ -401,13 +296,6 @@
                 android:id="@+id/group_cori"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
-
-
-                <RadioButton
-                    android:id="@+id/cori1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/cori_1" />
 
             </RadioGroup>
         </androidx.core.widget.NestedScrollView>

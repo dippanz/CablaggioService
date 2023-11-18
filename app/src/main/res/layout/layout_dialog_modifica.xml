@@ -24,23 +24,23 @@
 
         <ScrollView
             android:id="@+id/parent_container"
-            android:contentDescription="@string/contenuto_scorrevole"
             android:layout_width="290dp"
-            android:layout_margin="5dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/textViewTitle"
-            android:layout_centerHorizontal="true">
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:contentDescription="@string/contenuto_scorrevole">
 
 
                 <LinearLayout
                     android:id="@+id/container_editText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:orientation="vertical" />
-
-
-
+                    android:orientation="vertical"
+                    android:padding="5dp" />
 
 
         </ScrollView>

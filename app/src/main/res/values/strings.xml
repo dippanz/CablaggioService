@@ -45,7 +45,7 @@
     <string name="ok">OK</string>
     <string name="modifica">Modifica</string>
     <string name="info_preset">INFO PRESET</string>
-    <string name="info_1s">\t\t\t\t\t\t\t\tINFO %1$s</string>
+    <string name="info_1s">INFO %1$s</string>
     <string name="salva">Salva</string>
     <string name="annulla">Annulla</string>
     <string name="aggiungi">Aggiungi</string>
@@ -53,6 +53,8 @@
     <string name="contenuto_scorrevole">contenuto scorrevole</string>
     <string name="tabulazioni">\t\t</string>
     <string name="modifica_preset_s_1">Modifica preset: %1$s</string>
+    <string name="nome_preset_s_1">Nuovo nome preset: %1$s</string>
+    <string name="sicuro_di_voler_eliminare">Sicuro di voler eliminare %1$s?</string>
 
 
     <string-array name="batteria1String">
@@ -111,99 +113,99 @@
     </string-array>
 
     <string-array name="tastiera1String">
-        <item>Key L %MIC</item>
-        <item>Key R %MIC</item>
-        <item>Key L %MIC</item>
-        <item>Key R %MIC</item>
+        <item>Key L %D.I</item>
+        <item>Key R %D.I</item>
+        <item>Key L %D.I</item>
+        <item>Key R %D.I</item>
     </string-array>
 
     <string-array name="tastiera2String">
-        <item>Key L %MIC</item>
-        <item>Key R %MIC</item>
-        <item>Sequenze %MIC</item>
-        <item>Sequenze %MIC</item>
+        <item>Key L %D.I</item>
+        <item>Key R %D.I</item>
+        <item>Sequenze %D.I</item>
+        <item>Sequenze %D.I</item>
     </string-array>
 
     <string-array name="tastiera3String">
-        <item>Key L %MIC</item>
-        <item>Key R %MIC</item>
-        <item>Sequenze %MIC</item>
-        <item>Sequenze %MIC</item>
-        <item>Click %MIC</item>
-        <item>Click %MIC</item>
+        <item>Key L %D.I</item>
+        <item>Key R %D.I</item>
+        <item>Sequenze %D.I</item>
+        <item>Sequenze %D.I</item>
+        <item>Click %D.I</item>
+        <item>Click %D.I</item>
     </string-array>
 
     <string-array name="tastiera4String">
-        <item>Key L %MIC</item>
-        <item>Key R %MIC</item>
-        <item>Key L %MIC</item>
-        <item>Key R %MIC</item>
-        <item>Sequenze %MIC</item>
-        <item>Sequenze %MIC</item>
+        <item>Key L %D.I</item>
+        <item>Key R %D.I</item>
+        <item>Key L %D.I</item>
+        <item>Key R %D.I</item>
+        <item>Sequenze %D.I</item>
+        <item>Sequenze %D.I</item>
     </string-array>
 
     <string-array name="tastiera5String">
-        <item>Key L %MIC</item>
-        <item>Key R %MIC</item>
-        <item>Key L %MIC</item>
-        <item>Key  %MIC</item>
-        <item>Sequenze %MIC</item>
-        <item>Sequenze %MIC</item>
-        <item>Click %MIC</item>
-        <item>Click %MIC</item>
+        <item>Key L %D.I</item>
+        <item>Key R %D.I</item>
+        <item>Key L %D.I</item>
+        <item>Key  %D.I</item>
+        <item>Sequenze %D.I</item>
+        <item>Sequenze %D.I</item>
+        <item>Click %D.I</item>
+        <item>Click %D.I</item>
     </string-array>
 
     <string-array name="tastiera6String">
-        <item>Key L %MIC</item>
-        <item>Key R %MIC</item>
-        <item>Key L %MIC</item>
-        <item>Key R %MIC</item>
-        <item>Piano L %MIC</item>
-        <item>Piano R %MIC</item>
+        <item>Key L %D.I</item>
+        <item>Key R %D.I</item>
+        <item>Key L %D.I</item>
+        <item>Key R %D.I</item>
+        <item>Piano L %D.I</item>
+        <item>Piano R %D.I</item>
     </string-array>
 
     <string-array name="tastiera7String">
-        <item>Key L %MIC</item>
-        <item>Key R %MIC</item>
-        <item>Sequenze %MIC</item>
-        <item>Sequenze %MIC</item>
-        <item>Piano L %MIC</item>
-        <item>Piano R %MIC</item>
+        <item>Key L %D.I</item>
+        <item>Key R %D.I</item>
+        <item>Sequenze %D.I</item>
+        <item>Sequenze %D.I</item>
+        <item>Piano L %D.I</item>
+        <item>Piano R %D.I</item>
     </string-array>
 
     <string-array name="tastiera8String">
-        <item>Key L %MIC</item>
-        <item>Key R %MIC</item>
-        <item>Sequenze %MIC</item>
-        <item>Sequenze %MIC</item>
-        <item>Click %MIC</item>
-        <item>Click %MIC</item>
-        <item>Piano L %MIC</item>
-        <item>Piano R %MIC</item>
+        <item>Key L %D.I</item>
+        <item>Key R %D.I</item>
+        <item>Sequenze %D.I</item>
+        <item>Sequenze %D.I</item>
+        <item>Click %D.I</item>
+        <item>Click %D.I</item>
+        <item>Piano L %D.I</item>
+        <item>Piano R %D.I</item>
     </string-array>
 
     <string-array name="tastiera9String">
-        <item>Key L %MIC</item>
-        <item>Key R %MIC</item>
-        <item>Key L %MIC</item>
-        <item>Key R %MIC</item>
-        <item>Sequenze %MIC</item>
-        <item>Sequenze %MIC</item>
-        <item>Piano L %MIC</item>
-        <item>Piano R %MIC</item>
+        <item>Key L %D.I</item>
+        <item>Key R %D.I</item>
+        <item>Key L %D.I</item>
+        <item>Key R %D.I</item>
+        <item>Sequenze %D.I</item>
+        <item>Sequenze %D.I</item>
+        <item>Piano L %D.I</item>
+        <item>Piano R %D.I</item>
     </string-array>
 
     <string-array name="tastiera10String">
-        <item>Key L %MIC</item>
-        <item>Key R %MIC</item>
-        <item>Key L %MIC</item>
-        <item>Key  %MIC</item>
-        <item>Sequenze %MIC</item>
-        <item>Sequenze %MIC</item>
-        <item>Click %MIC</item>
-        <item>Click %MIC</item>
-        <item>Piano L %MIC</item>
-        <item>Piano R %MIC</item>
+        <item>Key L %D.I</item>
+        <item>Key R %D.I</item>
+        <item>Key L %D.I</item>
+        <item>Key  %D.I</item>
+        <item>Sequenze %D.I</item>
+        <item>Sequenze %D.I</item>
+        <item>Click %D.I</item>
+        <item>Click %D.I</item>
+        <item>Piano L %D.I</item>
+        <item>Piano R %D.I</item>
     </string-array>
 
     <string-array name="chitarra1String">

@@ -3,13 +3,11 @@ package com.example.cablaggioservice
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
-import android.app.ActionBar.LayoutParams
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.ContentValues
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.res.Resources.NotFoundException
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -27,6 +25,7 @@ import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
+import androidx.annotation.IdRes
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.content.res.ResourcesCompat
@@ -38,13 +37,15 @@ import com.example.cablaggioservice.databinding.FragSezioniBinding
 import org.json.JSONArray
 import java.io.File
 import java.lang.StringBuilder
+import java.util.Random
 import kotlin.math.abs
+import kotlin.math.absoluteValue
 
 class FragSezioni: Fragment(R.layout.frag_sezioni) {
 
     companion object {
-        private const val MAX_WIDTH = 170
-        private const val MAX_HEIGHT = 144
+        private const val MAX_WIDTH = 155
+        private const val MAX_HEIGHT = 130
         private const val NAME_BATTERIA = "BATTERIA"
         private const val NAME_PERCUSSIONI = "PERCUSSIONI"
         private const val NAME_TASTIERA = "TASTIERA"
@@ -107,8 +108,6 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //TODO CAMBIARE TUTTI GLI ID IN NUMERICI
-
         //setto tutti i popup per info singoli preset
         val radioGroups = mutableListOf<RadioGroup>()
         radioGroups.add(binding.groupBatteria)
@@ -117,32 +116,20 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
         radioGroups.add(binding.groupVoci)
         radioGroups.add(binding.groupTastiera)
 
-        // Itera attraverso tutti i RadioGroup
+        // Itera attraverso tutti i RadioGroup per creare i vari preset
         for (radioGroup in radioGroups) {
-            /*// Itera attraverso tutti i RadioButton nel RadioGroup corrente
-            for (i in 0 until radioGroup.childCount) {
-                val radioButton = radioGroup.getChildAt(i)
-                setOnLongListenerPopup(radioButton)
-
-                //setto nomiPreset
-                if(radioButton is RadioButton){
-                    radioButton.text = getNomePresetFromDB(radioButton)
-                }
-            }*/
-
             createRadioButtonFromDB(radioGroup)
         }
 
-        //per chitarra
-        for (i in 0 until binding.groupCheckChitarra.childCount) {
-            val checkBoxChitarra = binding.groupCheckChitarra.getChildAt(i)
-            setOnLongListenerPopup(checkBoxChitarra)
+        //crea preset chitarra
+        createCheckBoxFromDB(binding.groupCheckChitarra)
 
-            //setto nomiPreset
-            if(checkBoxChitarra is RadioButton){
-                checkBoxChitarra.text = getNomePresetFromDB(checkBoxChitarra)
-            }
-        }
+        setOnLongListenerCreatePreset(binding.checkboxBatteria)
+        setOnLongListenerCreatePreset(binding.checkBoxPercussioni)
+        setOnLongListenerCreatePreset(binding.checkboxChitarra)
+        setOnLongListenerCreatePreset(binding.checkBoxTastiera)
+        setOnLongListenerCreatePreset(binding.checkBoxVoci)
+        setOnLongListenerCreatePreset(binding.checkBoxCori)
 
         binding.buttonCaricaCanali.setOnClickListener {
 
@@ -155,10 +142,10 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
             //carico canali batteria
             if(binding.checkboxBatteria.isChecked){
 
-                val idStringArrayStrumento: String = try {
-                    resources.getResourceEntryName(binding.groupBatteria.checkedRadioButtonId) + "String"
-                }catch (e: NotFoundException){
-                    e.printStackTrace()
+                Log.i("msg", "check batteria: ${binding.groupBatteria.checkedRadioButtonId}")
+                val idStringArrayStrumento: String = if(binding.groupBatteria.checkedRadioButtonId > 0){
+                    binding.groupBatteria.checkedRadioButtonId.toString()
+                }else{
                     validModel = false
                     Toast.makeText(context, getString(R.string.inserire_pre_set, "batteria"), Toast.LENGTH_SHORT).show()
                     ""
@@ -180,10 +167,9 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
             //carico canali percussioni
             if(binding.checkBoxPercussioni.isChecked){
 
-                val idStringArrayStrumento: String = try {
-                    resources.getResourceEntryName(binding.groupPercussioni.checkedRadioButtonId) + "String"
-                }catch (e: NotFoundException){
-                    e.printStackTrace()
+                val idStringArrayStrumento: String = if(binding.groupPercussioni.checkedRadioButtonId > 0){
+                    binding.groupPercussioni.checkedRadioButtonId.toString()
+                }else{
                     validModel = false
                     Toast.makeText(context, getString(R.string.inserire_pre_set, "percussioni"), Toast.LENGTH_SHORT).show()
                     ""
@@ -214,10 +200,9 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
             //carico canali tastiera
             if(binding.checkBoxTastiera.isChecked){
 
-                val idStringArrayStrumento: String = try {
-                    resources.getResourceEntryName(binding.groupTastiera.checkedRadioButtonId) + "String"
-                }catch (e: NotFoundException){
-                    e.printStackTrace()
+                val idStringArrayStrumento: String = if(binding.groupTastiera.checkedRadioButtonId > 0){
+                    binding.groupTastiera.checkedRadioButtonId.toString()
+                }else{
                     validModel = false
                     Toast.makeText(context, getString(R.string.inserire_pre_set, "tastiera"), Toast.LENGTH_SHORT).show()
                     ""
@@ -245,14 +230,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
                 for(e in binding.groupCheckChitarra.children){
                     if(e is CheckBox && e.isChecked){
 
-                        val idStringArrayStrumento: String = try {
-                            resources.getResourceEntryName(e.id) + "String"
-                        }catch (e: NotFoundException){
-                            e.printStackTrace()
-                            validModel = false
-                            Toast.makeText(context, getString(R.string.scegliere_pre_set, "chitarra"), Toast.LENGTH_SHORT).show()
-                            ""
-                        }
+                        val idStringArrayStrumento: String = e.id.toString()
 
                         val stringArray = getStringArrayFromDB(idStringArrayStrumento)
 
@@ -270,6 +248,11 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
                         indexGuitar++
                     }
                 }
+
+                if(indexGuitar == 1){
+                    validModel = false
+                    Toast.makeText(context, getString(R.string.scegliere_pre_set, "chitarra"), Toast.LENGTH_SHORT).show()
+                }
             }
 
             //carico canali sax
@@ -283,10 +266,9 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
             //carico canali VOCI
             if(binding.checkBoxVoci.isChecked){
 
-                val idStringArrayStrumento: String = try {
-                    resources.getResourceEntryName(binding.groupVoci.checkedRadioButtonId) + "String"
-                }catch (e: NotFoundException){
-                    e.printStackTrace()
+                val idStringArrayStrumento: String = if(binding.groupVoci.checkedRadioButtonId > 0){
+                    binding.groupVoci.checkedRadioButtonId.toString()
+                }else{
                     validModel = false
                     Toast.makeText(context, getString(R.string.inserire_pre_set, "voci"), Toast.LENGTH_SHORT).show()
                     ""
@@ -309,10 +291,9 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
             //carico canali CORI
             if(binding.checkBoxCori.isChecked){
 
-                val idStringArrayStrumento: String = try {
-                    resources.getResourceEntryName(binding.groupCori.checkedRadioButtonId) + "String"
-                }catch (e: NotFoundException){
-                    e.printStackTrace()
+                val idStringArrayStrumento: String = if(binding.groupCori.checkedRadioButtonId > 0){
+                    binding.groupCori.checkedRadioButtonId.toString()
+                }else{
                     validModel = false
                     Toast.makeText(context, getString(R.string.inserire_pre_set, "cori"), Toast.LENGTH_SHORT).show()
                     ""
@@ -365,10 +346,67 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
         }
     }
 
+    private fun createCheckBoxFromDB(groupCheckChitarra: LinearLayout) {
+        //apro db
+        val dbHelper = MyDatabaseHelper(requireContext())
+        val db = dbHelper.readableDatabase
 
-    /**
-     * @return la lista contiene in ordine: id, nomePreset, jsonArray, nomeGruppo
-     */
+        // Definisci una proiezione che specifica quali colonne vuoi recuperare
+        val projection = arrayOf(
+            MyDatabaseHelper.FeedReaderContract.FeedEntry.ID,
+            MyDatabaseHelper.FeedReaderContract.FeedEntry.COLUMN_NAME_ARRAY,
+            MyDatabaseHelper.FeedReaderContract.FeedEntry.COLUMN_NAME_PRESET,
+            MyDatabaseHelper.FeedReaderContract.FeedEntry.GROUPS
+        )
+
+        // Specifica le altre clausole della query, se necessario
+        val selection = "${MyDatabaseHelper.FeedReaderContract.FeedEntry.GROUPS} = ?"
+        val selectionArgs = arrayOf(groupCheckChitarra.id.toString())
+
+        // Eseguire la query per recuperare i dati
+        val cursor = db.query(
+            MyDatabaseHelper.FeedReaderContract.FeedEntry.TABLE_NAME, // Tabella da cui recuperare i dati
+            projection, // Colonnes
+            selection, // Colonna di selezione
+            selectionArgs, // Argomenti di selezione
+            null, // Raggruppamento delle righe
+            null, // Filtro sugli altri gruppi di righe
+            null // Ordine di ordinamento
+        )
+
+        // Ora puoi scorrere il cursore per ottenere i risultati
+        while (cursor.moveToNext()){
+            val id =  cursor.getString(cursor.getColumnIndexOrThrow(MyDatabaseHelper.FeedReaderContract.FeedEntry.ID))
+            val nomePreset = cursor.getString(cursor.getColumnIndexOrThrow(MyDatabaseHelper.FeedReaderContract.FeedEntry.COLUMN_NAME_PRESET))
+            val jsonString = cursor.getString(cursor.getColumnIndexOrThrow(MyDatabaseHelper.FeedReaderContract.FeedEntry.COLUMN_NAME_ARRAY))
+            val nomeGroup = cursor.getString(cursor.getColumnIndexOrThrow(MyDatabaseHelper.FeedReaderContract.FeedEntry.GROUPS))
+
+            //creo radioButton con specifiche sopra elencate
+            val checkBox = settingCheckBox(nomePreset, id)
+            groupCheckChitarra.addView(checkBox)
+            Log.i("msg","id: $id")
+            setOnLongListenerPopup(checkBox)
+
+            mappaValori[id] = listOf(nomePreset, jsonString, nomeGroup)
+        }
+
+        cursor.close()
+        db.close()
+    }
+
+    private fun settingCheckBox(nomePreset: String, id: String): CheckBox{
+        val checkBox = CheckBox(requireContext())
+        checkBox.id = id.toInt()
+        checkBox.textSize = 15f
+        checkBox.text = nomePreset
+        val layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        checkBox.layoutParams = layoutParams
+        return checkBox
+    }
+
     private fun createRadioButtonFromDB(radioGroup: RadioGroup){
         //apro db
         val dbHelper = MyDatabaseHelper(requireContext())
@@ -405,29 +443,33 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
             val nomeGroup = cursor.getString(cursor.getColumnIndexOrThrow(MyDatabaseHelper.FeedReaderContract.FeedEntry.GROUPS))
 
             //creo radioButton con specifiche sopra elencate
-            val radioButton = RadioButton(requireContext())
-            radioButton.id = id.toInt()
-            radioButton.text = nomePreset
-            val layoutParams = RadioGroup.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            )
-            radioButton.layoutParams = layoutParams
-
+            val radioButton = settingRadioButton(nomePreset, id)
             radioGroup.addView(radioButton)
+            Log.i("msg","id: $id")
+            setOnLongListenerPopup(radioButton)
+
+            mappaValori[id] = listOf(nomePreset, jsonString, nomeGroup)
         }
 
         cursor.close()
         db.close()
     }
 
+    private fun settingRadioButton(nomePreset: String, id: String): RadioButton{
+        val radioButton = RadioButton(requireContext())
+        radioButton.id = id.toInt()
+        radioButton.textSize = 15f
+        radioButton.text = nomePreset
+        val layoutParams = RadioGroup.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        radioButton.layoutParams = layoutParams
+        return radioButton
+    }
+
     private fun getNomePresetFromDB(view: View): CharSequence {
-        val idStringArrayStrumento: String = try {
-            resources.getResourceEntryName(view.id) + "String"
-        }catch (e: NotFoundException){
-            e.printStackTrace()
-            ""
-        }
+        val idStringArrayStrumento: String = view.id.toString()
 
         //apro db
         val dbHelper = MyDatabaseHelper(requireContext())
@@ -541,19 +583,12 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
 
     private fun setOnLongListenerPopup(radioButton: View){
         if(radioButton is RadioButton || radioButton is CheckBox){
+            Log.i("msg","setto onLongListener")
 
-            var idPreset: String
             // Verifica se l'elemento è un RadioButton
             radioButton.setOnLongClickListener {
 
-                val idStringArrayStrumento: String = try {
-                    idPreset = resources.getResourceEntryName(radioButton.id)
-                    idPreset + "String"
-                }catch (e: NotFoundException){
-                    e.printStackTrace()
-                    idPreset = ""
-                    ""
-                }
+                val idStringArrayStrumento: String = radioButton.id.toString()
 
                 //recupero dati
                 val stringArray = getStringArrayFromDB(idStringArrayStrumento)
@@ -717,17 +752,32 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
                     dialogBuilder.show()
                 }
 
-                alertDialogBuilder.setPositiveButton("OK") { dialog, _ ->
+                alertDialogBuilder.setPositiveButton("Chiudi") { dialog, _ ->
                     // Azioni da eseguire quando si fa clic su OK
                     dialog.dismiss()
                 }
 
                 alertDialogBuilder.setNegativeButton("Elimina"){ _: DialogInterface, _: Int ->
-                    val parentPreset = radioButton.parent
-                    parentPreset?.let {
-                        (it as? ViewGroup)?.removeView(radioButton)
-                    }
 
+                    //creo popup informativo
+                    val alertConfirmElimination = AlertDialog.Builder(requireContext())
+                    alertConfirmElimination.setTitle("Conferma eliminazione")
+                        .setMessage(getString(R.string.sicuro_di_voler_eliminare, getNomePresetFromDB(radioButton)))
+                        .setNegativeButton("Annulla"){ dialog: DialogInterface, _: Int ->
+                            dialog.dismiss()
+                        }
+                        .setPositiveButton("Si"){ dialog: DialogInterface, _: Int ->
+                            //cancello view dinamicamente
+                            val parentPreset = radioButton.parent
+                            parentPreset?.let {
+                                (it as? ViewGroup)?.removeView(radioButton)
+                            }
+
+                            //cancello view dal db
+                            deletePreset(radioButton.id)
+
+                            dialog.dismiss()
+                        }.create().show()
                 }
 
                 val alertDialog = alertDialogBuilder.create()
@@ -742,6 +792,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
                     positiveButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.custom_button_background_color))
                     negativeButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.custom_button_background_color))
                     neutralButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.custom_button_background_color))
+
                 }
                 alertDialog.show()
 
@@ -753,6 +804,188 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
         }
     }
 
+    private fun setOnLongListenerCreatePreset(checkBox: CheckBox){
+
+        // Verifica se l'elemento è un RadioButton
+        checkBox.setOnLongClickListener {
+                    val dialogBuilder = Dialog(requireContext(), R.style.RoundedCornersDialog)
+                    dialogBuilder.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                    dialogBuilder.setCancelable(true)
+
+                    val rootView = LayoutInflater.from(requireContext()).inflate(R.layout.layout_dialog_modifica, null)
+                    dialogBuilder.setContentView(rootView)
+
+                    val titleEditText = rootView.findViewById<EditText>(R.id.textViewTitle)
+                    titleEditText.setText(getString(R.string.nome_preset_s_1, ""))
+                    titleEditText.addTextChangedListener(object : TextWatcher {
+
+                        private val startText = titleEditText.text.toString().split(": ")[0] + ": "
+
+                        override fun beforeTextChanged(
+                            p0: CharSequence?,
+                            p1: Int,
+                            p2: Int,
+                            p3: Int
+                        ) {
+                            Log.i("msg", startText)
+                        }
+
+                        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                            if (s != null) {
+                                if (s.endsWith(": ")) {
+                                    titleEditText.setSelection(s.indexOf(": ") + 2)
+                                }
+                            }
+                        }
+
+                        override fun afterTextChanged(editable: Editable?) {
+                            val text = editable.toString()
+
+                            if (!text.startsWith(startText)) {
+                                editable?.replace(0, editable.length, startText)
+
+                            }
+
+                            // Controlla se l'utente sta cercando di cancellare i due punti
+                            if (text == startText) {
+                                editable?.insert(startText.length, " ")
+                            }
+                        }
+                    })
+
+                    val editTextContainer = rootView.findViewById<LinearLayout>(R.id.container_editText)
+
+                    val saveButton = rootView.findViewById<Button>(R.id.buttonSalva)
+                    val cancelButton = rootView.findViewById<Button>(R.id.buttonAnnulla)
+                    val addButton = rootView.findViewById<Button>(R.id.buttonAggiungi)
+
+                    saveButton.setOnClickListener {
+                        //prendo il nuovo nomePreset
+                        val nomePreset = titleEditText.text.toString().split(": ")[1]
+
+                        val stringList = mutableListOf<String>()
+                        //salvare eventuali modifiche
+                        for(e in editTextContainer.children){
+                            if(e is EditText && e.length() != 0) {
+                                stringList.add(e.text.toString())
+                            }
+                        }
+
+                        //TODO RISOLVERE PROBLEMA QUANDO AGGIUNGO TASTIERA METTERE %MIC O %DI
+
+                        if(nomePreset.isEmpty()){
+                            Toast.makeText(requireContext(), "inserire un nome preset", Toast.LENGTH_SHORT).show()
+                        }else if(stringList.isEmpty()) {
+                            Toast.makeText(requireContext(), "inserire almeno un valore per il preset", Toast.LENGTH_SHORT).show()
+                        }else{
+                            val currentTimeMillis = System.currentTimeMillis()
+                            val random = Random(currentTimeMillis)
+
+                            val randomId = random.nextInt().absoluteValue
+                           val idGroup = when(checkBox.id){
+                                R.id.checkboxBatteria -> { R.id.group_batteria }
+                                R.id.checkBoxPercussioni -> { R.id.group_percussioni }
+                                R.id.checkboxChitarra -> { R.id.group_check_chitarra }
+                                R.id.checkBoxVoci -> { R.id.group_voci }
+                                R.id.checkBoxTastiera -> { R.id.group_tastiera }
+                                R.id.checkBoxCori -> { R.id.group_cori }
+                               else ->{-1}
+                           }
+
+                            if(idGroup > 0){
+                                insertNewPresetOnDB(randomId,nomePreset, stringList, idGroup)
+                            }
+
+                            //creo check o radiobutton
+                            if(idGroup == R.id.group_check_chitarra){
+                                val checkBoxView = settingCheckBox(nomePreset, randomId.toString())
+                                setOnLongListenerPopup(checkBoxView)
+                                binding.root.findViewById<LinearLayout>(idGroup).addView(checkBoxView)
+                            }else{
+                                val radioButton = settingRadioButton(nomePreset, randomId.toString())
+                                setOnLongListenerPopup(radioButton)
+                                binding.root.findViewById<RadioGroup>(idGroup).addView(radioButton)
+                            }
+
+                            dialogBuilder.dismiss()
+                        }
+                    }
+
+                    cancelButton.setOnClickListener {
+                        dialogBuilder.dismiss() // Chiudi il Dialog senza salvare
+                    }
+
+                    addButton.setOnClickListener {
+                        val lastIdEditText = if(editTextContainer.childCount == 0){
+                            0
+                        }else{
+                            editTextContainer.getChildAt(editTextContainer.childCount - 1).id
+                        }
+
+                        val layoutParams = LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                        )
+                        val editText = CustomEditText(requireContext())
+                        editText.id = lastIdEditText + 1
+                        editText.setPadding(5)
+                        editText.setBackgroundColor(resources.getColor(R.color.trasparente, null))
+                        editText.hint = "Aggiungi un valore" // Imposta la parola come suggerimento
+                        editText.layoutParams = layoutParams
+                        editTextContainer.addView(editText) // Aggiungi la casella di testo al layout
+                        setScorrimento(editText)
+                    }
+
+                    dialogBuilder.show()
+
+            true
+        }
+    }
+
+    private fun insertNewPresetOnDB(randomId: Int, nomePreset: String, stringList: List<String>, @IdRes idGroup: Int) {
+        val jsonString = jsonArraytojsonString(stringList)
+
+        val values = ContentValues().apply {
+            put(MyDatabaseHelper.FeedReaderContract.FeedEntry.ID, randomId)
+            put(MyDatabaseHelper.FeedReaderContract.FeedEntry.COLUMN_NAME_PRESET, nomePreset)
+            put(MyDatabaseHelper.FeedReaderContract.FeedEntry.COLUMN_NAME_ARRAY, jsonString)
+            put(MyDatabaseHelper.FeedReaderContract.FeedEntry.GROUPS, idGroup)
+        }
+
+        val dbHelper = MyDatabaseHelper(requireContext())
+        val db = dbHelper.writableDatabase
+
+        //newRowId conterrà l'ID della nuova riga inserita, o -1 se si è verificato un errore durante l'inserimento
+        val newRowId = db.insert(MyDatabaseHelper.FeedReaderContract.FeedEntry.TABLE_NAME, null, values)
+
+        if(newRowId < 0){
+            Log.i("msg", "ERRORE INSERIMENTO VALORI QUERY")
+        }else{
+            Log.i("msg", "QUERY INSERITA CORRETTAMENTE")
+        }
+
+    }
+
+    private fun deletePreset(id: Int) {
+        if(id > 0){
+            val dbHelper = MyDatabaseHelper(requireContext())
+            val db = dbHelper.writableDatabase
+
+            val deletedRows = db.delete(MyDatabaseHelper.FeedReaderContract.FeedEntry.TABLE_NAME,
+                MyDatabaseHelper.FeedReaderContract.FeedEntry.ID + " = ?",
+                arrayOf(id.toString()))
+
+            if (deletedRows <= 0 || deletedRows > 1) {
+                Log.i("msg", "ERRORE ELIMINAZIONE PRESET")
+            }
+
+            db.close()
+        }
+        else{
+            Log.i("msg", "ERRORE: ID PRESET DA ELIMINARE NON VALIDO")
+        }
+    }
+
     private fun updateDataOnDB(
         id: String,
         nomePreset: String,
@@ -760,12 +993,6 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
     ) {
         val dbHelper = MyDatabaseHelper(requireContext())
         val db = dbHelper.writableDatabase
-
-        val pattern = Regex(".*?\\d+String")
-
-        if (!pattern.matches(id)) {
-            throw IllegalArgumentException("$id non segue il pattern di chiave predefinito")
-        }
 
         //aggiorno anche mappa di valori
         val listUpdate = if(mappaValori.containsKey(id)){
@@ -1100,10 +1327,9 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
 
     private fun adattaTastiera(){
         val batteria = binding.scrollViewTastiera
-        Log.i("msg", batteria.height.toString())
         val altezza = calculateScrollViewHeight(batteria)
 
-        // Imposta l'altezza massima a 144dp
+        // Imposta l'altezza massima
         if (altezza > dpToPx() || altezza == 0) {
             val maxHeight = dpToPx()
             val params = batteria.layoutParams
@@ -1112,7 +1338,8 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
         }
 
         val larghezza = calcolaWidthMax(batteria)
-        if(larghezza > dpToPx(MAX_WIDTH)){
+        Log.i("msg", batteria.width.toString())
+        if(larghezza > dpToPx(MAX_WIDTH) || larghezza == 0){
             val maxWidth = dpToPx(MAX_WIDTH)
             val params = batteria.layoutParams
             params.width = maxWidth
@@ -1134,7 +1361,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
         }
 
         val larghezza = calcolaWidthMax(batteria)
-        if(larghezza > dpToPx(MAX_WIDTH)){
+        if(larghezza > dpToPx(MAX_WIDTH) || larghezza == 0){
             val maxWidth = dpToPx(MAX_WIDTH)
             val params = batteria.layoutParams
             params.width = maxWidth
@@ -1156,7 +1383,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
         }
 
         val larghezza = calcolaWidthMax(batteria)
-        if(larghezza > dpToPx(MAX_WIDTH)){
+        if(larghezza > dpToPx(MAX_WIDTH) || larghezza == 0){
             val maxWidth = dpToPx(MAX_WIDTH)
             val params = batteria.layoutParams
             params.width = maxWidth
@@ -1178,7 +1405,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
         }
 
         val larghezza = calcolaWidthMax(batteria)
-        if(larghezza > dpToPx(MAX_WIDTH)){
+        if(larghezza > dpToPx(MAX_WIDTH) || larghezza == 0){
             val maxWidth = dpToPx(MAX_WIDTH)
             val params = batteria.layoutParams
             params.width = maxWidth
