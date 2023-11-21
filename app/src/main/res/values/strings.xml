@@ -55,6 +55,12 @@
     <string name="modifica_preset_s_1">Modifica preset: %1$s</string>
     <string name="nome_preset_s_1">Nuovo nome preset: %1$s</string>
     <string name="sicuro_di_voler_eliminare">Sicuro di voler eliminare %1$s?</string>
+    <string name="di">D.I.</string>
+    <string name="mic">MIC</string>
+    <string name="scelta_mic_e_di_disattivata">Scelta MIC e DI disattivata</string>
+    <string name="scelta_mic_e_di_attivata">Scelta MIC e DI attivata</string>
+    <string name="dimic_attivo">DIMIC_attivo</string>
+    <string name="aggiungi_un_valore">Aggiungi un valore</string>
 
 
     <string-array name="batteria1String">

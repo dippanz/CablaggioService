@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -36,6 +39,7 @@
     <queries>
         <!-- Specifica le app esterne che la tua app intende utilizzare tramite Intent -->
         <package android:name="com.nomepackage.app_terza_parte" />
+        <package android:name="com.microsoft.office.excel" />
     </queries>
 
 </manifest>

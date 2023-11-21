@@ -5,12 +5,17 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
 import androidx.annotation.ArrayRes
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.example.cablaggioservice.databinding.ActivityMainBinding
 import org.json.JSONArray
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,6 +25,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        toolbar.title = ""
+        setSupportActionBar(toolbar)
 
         val t = supportFragmentManager.beginTransaction()
         t.replace(R.id.container_main, FragSezioni())
@@ -70,6 +79,7 @@ class MainActivity : AppCompatActivity() {
 
             // Imposta isFirstRun a false per indicare che le preferenze sono state impostate
             sharedPreferences.edit().putBoolean("isFirstRun", false).apply()
+            sharedPreferences.edit().putBoolean(getString(R.string.dimic_attivo), true).apply()
         }
     }
 
@@ -107,6 +117,34 @@ class MainActivity : AppCompatActivity() {
             Log.i("msg", "ERRORE INSERIMENTO VALORI QUERY")
         }else{
             Log.i("msg", "QUERY INSERITA CORRETTAMENTE")
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.menu_activate_dimic , menu)
+        return true
+    }
+
+    // Gestisci l'azione quando un elemento del menu viene selezionato
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.MENU_1 -> {
+                val sharedPreferences = getSharedPreferences("preset", Context.MODE_PRIVATE)
+                val attivazioneMICDI = sharedPreferences.getBoolean(getString(R.string.dimic_attivo), true)
+                if(attivazioneMICDI){
+                    Toast.makeText(applicationContext,
+                        getString(R.string.scelta_mic_e_di_disattivata), Toast.LENGTH_SHORT).show()
+                }else{
+                    Toast.makeText(applicationContext,
+                        getString(R.string.scelta_mic_e_di_attivata), Toast.LENGTH_SHORT).show()
+                }
+
+                sharedPreferences.edit().putBoolean(getString(R.string.dimic_attivo), !attivazioneMICDI).apply()
+                true
+            }
+            // Aggiungi altre voci del menu, se necessario...
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
