@@ -6,7 +6,6 @@ import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
-import android.content.ContentValues
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -28,25 +27,16 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.RadioGroup
-import android.widget.RelativeLayout
 import android.widget.Toast
-import androidx.annotation.IdRes
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.children
-import androidx.core.view.marginTop
-import androidx.core.view.setPadding
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.Fragment
 import com.example.cablaggioservice.databinding.FragSezioniBinding
-import org.apache.poi.sl.usermodel.Line
-import org.json.JSONArray
 import java.io.File
-import java.lang.StringBuilder
-import java.util.Random
 import kotlin.math.abs
-import kotlin.math.absoluteValue
 
 class FragSezioni: Fragment(R.layout.frag_sezioni) {
 
@@ -71,7 +61,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
      * il nome del preset, come secondo elemento un jsonString che rappresenta
      * l'array contente i singoli strumenti, come terzo elemento l'id del group a cui appartiene
      */
-    private val mappaValori: HashMap<String, List<String>> = HashMap()
+    private lateinit var dbmsBoundary: DBMSBoundary
 
     private fun performSwipeAnimation(view: View, endPosition: Float) {
         // Aggiungi un'animazione di indicatore visivo
@@ -114,6 +104,8 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        dbmsBoundary = DBMSBoundary(requireContext())
+
         //setto tutti i popup per info singoli preset
         val radioGroups = mutableListOf<RadioGroup>()
         radioGroups.add(binding.groupBatteria)
@@ -124,11 +116,25 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
 
         // Itera attraverso tutti i RadioGroup per creare i vari preset
         for (radioGroup in radioGroups) {
-            createRadioButtonFromDB(radioGroup)
+            val list = dbmsBoundary.createRadioButtonFromDB(radioGroup)
+            for(element in list){
+                val nomePreset = element[1]
+                val id = element[0]
+
+                //creo radioButton con specifiche sopra elencate
+                val radioButton = settingRadioButton(nomePreset, id)
+                radioGroup.addView(radioButton)
+                setOnLongListenerPopup(radioButton)
+            }
         }
 
         //crea preset chitarra
-        createCheckBoxFromDB(binding.groupCheckChitarra)
+        val list = dbmsBoundary.createCheckBoxFromDB(binding.groupCheckChitarra)
+
+        //creo radioButton con specifiche sopra elencate
+        val checkBox = settingCheckBox(list[1], list[0])
+        binding.groupCheckChitarra.addView(checkBox)
+        setOnLongListenerPopup(checkBox)
 
         setOnLongListenerCreatePreset(binding.checkboxBatteria)
         setOnLongListenerCreatePreset(binding.checkBoxPercussioni)
@@ -155,7 +161,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
                     ""
                 }
 
-                val stringArray = getStringArrayFromDB(idStringArrayStrumento)
+                val stringArray = dbmsBoundary.getStringArrayFromDB(idStringArrayStrumento)
                 Log.i("msg", stringArray.toString())
 
                 //creo i modelli batteria
@@ -180,7 +186,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
                     ""
                 }
 
-                val stringArray = getStringArrayFromDB(idStringArrayStrumento)
+                val stringArray = dbmsBoundary.getStringArrayFromDB(idStringArrayStrumento)
                 Log.i("msg", stringArray.toString())
 
                 val range = IntRange(modelList[modelList.lastIndex].id.toInt(), stringArray.size + modelList[modelList.lastIndex].id.toInt() - 1)
@@ -214,7 +220,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
                     ""
                 }
 
-                val stringArray = getStringArrayFromDB(idStringArrayStrumento)
+                val stringArray = dbmsBoundary.getStringArrayFromDB(idStringArrayStrumento)
 
                 Log.i("msg", stringArray.toString())
 
@@ -230,7 +236,6 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
                 }
             }
 
-            //todo controllare se per le chitarre bisogna mettere la scelta tra di e mic
             //carico canali CHITARRA
             if(binding.checkboxChitarra.isChecked){
                 var indexGuitar = 1
@@ -239,7 +244,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
 
                         val idStringArrayStrumento: String = e.id.toString()
 
-                        val stringArray = getStringArrayFromDB(idStringArrayStrumento)
+                        val stringArray = dbmsBoundary.getStringArrayFromDB(idStringArrayStrumento)
 
                         val range = IntRange(modelList[modelList.lastIndex].id.toInt(), stringArray.size + modelList[modelList.lastIndex].id.toInt() - 1)
                         //creo i modelli batteria
@@ -281,7 +286,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
                     ""
                 }
 
-                val stringArray = getStringArrayFromDB( idStringArrayStrumento)
+                val stringArray = dbmsBoundary.getStringArrayFromDB( idStringArrayStrumento)
                 Log.i("msg", stringArray.toString())
 
                 val range = IntRange(modelList[modelList.lastIndex].id.toInt(), stringArray.size + modelList[modelList.lastIndex].id.toInt() - 1)
@@ -307,7 +312,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
                     ""
                 }
 
-                val stringArray = getStringArrayFromDB(idStringArrayStrumento)
+                val stringArray = dbmsBoundary.getStringArrayFromDB(idStringArrayStrumento)
 
                 val range = IntRange(modelList[modelList.lastIndex].id.toInt(), stringArray.size + modelList[modelList.lastIndex].id.toInt() - 1)
                 //creo i modelli CORI
@@ -356,53 +361,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
         }
     }
 
-    private fun createCheckBoxFromDB(groupCheckChitarra: LinearLayout) {
-        //apro db
-        val dbHelper = MyDatabaseHelper(requireContext())
-        val db = dbHelper.readableDatabase
 
-        // Definisci una proiezione che specifica quali colonne vuoi recuperare
-        val projection = arrayOf(
-            MyDatabaseHelper.FeedReaderContract.FeedEntry.ID,
-            MyDatabaseHelper.FeedReaderContract.FeedEntry.COLUMN_NAME_ARRAY,
-            MyDatabaseHelper.FeedReaderContract.FeedEntry.COLUMN_NAME_PRESET,
-            MyDatabaseHelper.FeedReaderContract.FeedEntry.GROUPS
-        )
-
-        // Specifica le altre clausole della query, se necessario
-        val selection = "${MyDatabaseHelper.FeedReaderContract.FeedEntry.GROUPS} = ?"
-        val selectionArgs = arrayOf(groupCheckChitarra.id.toString())
-
-        // Eseguire la query per recuperare i dati
-        val cursor = db.query(
-            MyDatabaseHelper.FeedReaderContract.FeedEntry.TABLE_NAME, // Tabella da cui recuperare i dati
-            projection, // Colonnes
-            selection, // Colonna di selezione
-            selectionArgs, // Argomenti di selezione
-            null, // Raggruppamento delle righe
-            null, // Filtro sugli altri gruppi di righe
-            null // Ordine di ordinamento
-        )
-
-        // Ora puoi scorrere il cursore per ottenere i risultati
-        while (cursor.moveToNext()){
-            val id =  cursor.getString(cursor.getColumnIndexOrThrow(MyDatabaseHelper.FeedReaderContract.FeedEntry.ID))
-            val nomePreset = cursor.getString(cursor.getColumnIndexOrThrow(MyDatabaseHelper.FeedReaderContract.FeedEntry.COLUMN_NAME_PRESET))
-            val jsonString = cursor.getString(cursor.getColumnIndexOrThrow(MyDatabaseHelper.FeedReaderContract.FeedEntry.COLUMN_NAME_ARRAY))
-            val nomeGroup = cursor.getString(cursor.getColumnIndexOrThrow(MyDatabaseHelper.FeedReaderContract.FeedEntry.GROUPS))
-
-            //creo radioButton con specifiche sopra elencate
-            val checkBox = settingCheckBox(nomePreset, id)
-            groupCheckChitarra.addView(checkBox)
-            Log.i("msg","id: $id")
-            setOnLongListenerPopup(checkBox)
-
-            mappaValori[id] = listOf(nomePreset, jsonString, nomeGroup)
-        }
-
-        cursor.close()
-        db.close()
-    }
 
     private fun settingCheckBox(nomePreset: String, id: String): CheckBox{
         val checkBox = CheckBox(requireContext())
@@ -415,54 +374,6 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
         )
         checkBox.layoutParams = layoutParams
         return checkBox
-    }
-
-    private fun createRadioButtonFromDB(radioGroup: RadioGroup){
-        //apro db
-        val dbHelper = MyDatabaseHelper(requireContext())
-        val db = dbHelper.readableDatabase
-
-        // Definisci una proiezione che specifica quali colonne vuoi recuperare
-        val projection = arrayOf(
-            MyDatabaseHelper.FeedReaderContract.FeedEntry.ID,
-            MyDatabaseHelper.FeedReaderContract.FeedEntry.COLUMN_NAME_ARRAY,
-            MyDatabaseHelper.FeedReaderContract.FeedEntry.COLUMN_NAME_PRESET,
-            MyDatabaseHelper.FeedReaderContract.FeedEntry.GROUPS
-        )
-
-        // Specifica le altre clausole della query, se necessario
-        val selection = "${MyDatabaseHelper.FeedReaderContract.FeedEntry.GROUPS} = ?"
-        val selectionArgs = arrayOf(radioGroup.id.toString())
-
-        // Eseguire la query per recuperare i dati
-        val cursor = db.query(
-            MyDatabaseHelper.FeedReaderContract.FeedEntry.TABLE_NAME, // Tabella da cui recuperare i dati
-            projection, // Colonnes
-            selection, // Colonna di selezione
-            selectionArgs, // Argomenti di selezione
-            null, // Raggruppamento delle righe
-            null, // Filtro sugli altri gruppi di righe
-            null // Ordine di ordinamento
-        )
-
-        // Ora puoi scorrere il cursore per ottenere i risultati
-        while (cursor.moveToNext()){
-            val id =  cursor.getString(cursor.getColumnIndexOrThrow(MyDatabaseHelper.FeedReaderContract.FeedEntry.ID))
-            val nomePreset = cursor.getString(cursor.getColumnIndexOrThrow(MyDatabaseHelper.FeedReaderContract.FeedEntry.COLUMN_NAME_PRESET))
-            val jsonString = cursor.getString(cursor.getColumnIndexOrThrow(MyDatabaseHelper.FeedReaderContract.FeedEntry.COLUMN_NAME_ARRAY))
-            val nomeGroup = cursor.getString(cursor.getColumnIndexOrThrow(MyDatabaseHelper.FeedReaderContract.FeedEntry.GROUPS))
-
-            //creo radioButton con specifiche sopra elencate
-            val radioButton = settingRadioButton(nomePreset, id)
-            radioGroup.addView(radioButton)
-            Log.i("msg","id: $id")
-            setOnLongListenerPopup(radioButton)
-
-            mappaValori[id] = listOf(nomePreset, jsonString, nomeGroup)
-        }
-
-        cursor.close()
-        db.close()
     }
 
     private fun settingRadioButton(nomePreset: String, id: String): RadioButton{
@@ -478,119 +389,6 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
         return radioButton
     }
 
-    private fun getNomePresetFromDB(view: View): CharSequence {
-        val idStringArrayStrumento: String = view.id.toString()
-
-        //apro db
-        val dbHelper = MyDatabaseHelper(requireContext())
-        val db = dbHelper.readableDatabase
-
-        if(mappaValori.containsKey(idStringArrayStrumento)){
-            val nomePreset = mappaValori.getValue(idStringArrayStrumento)[0]
-            db.close()
-            Log.i("msg", "prendo dato $idStringArrayStrumento da mappa")
-            return nomePreset
-        }else {
-            // Definisci una proiezione che specifica quali colonne vuoi recuperare
-            val projection = arrayOf(
-                MyDatabaseHelper.FeedReaderContract.FeedEntry.COLUMN_NAME_ARRAY,
-                MyDatabaseHelper.FeedReaderContract.FeedEntry.COLUMN_NAME_PRESET
-            )
-
-            // Specifica le altre clausole della query, se necessario
-            val selection = "${MyDatabaseHelper.FeedReaderContract.FeedEntry.ID} = ?"
-            val selectionArgs = arrayOf(idStringArrayStrumento)
-
-            // Eseguire la query per recuperare i dati
-            val cursor = db.query(
-                MyDatabaseHelper.FeedReaderContract.FeedEntry.TABLE_NAME, // Tabella da cui recuperare i dati
-                projection, // Colonnes
-                selection, // Colonna di selezione
-                selectionArgs, // Argomenti di selezione
-                null, // Raggruppamento delle righe
-                null, // Filtro sugli altri gruppi di righe
-                null // Ordine di ordinamento
-            )
-
-            // Ora puoi scorrere il cursore per ottenere i risultati
-            return if (cursor.moveToNext()) {
-                val nomePreset =  cursor.getString(cursor.getColumnIndexOrThrow(MyDatabaseHelper.FeedReaderContract.FeedEntry.COLUMN_NAME_PRESET))
-                val jsonString = cursor.getString(cursor.getColumnIndexOrThrow(MyDatabaseHelper.FeedReaderContract.FeedEntry.COLUMN_NAME_ARRAY))
-                cursor.close()
-                db.close()
-                mappaValori[idStringArrayStrumento] = listOf(nomePreset,jsonString)
-                nomePreset
-            } else {
-                ""
-            }
-        }
-
-    }
-
-    /**
-     * se la lista non è gia presente nella mappa la va a recuperare e la setta nella mappa
-     * @return lista di strumenti
-     */
-    private fun getStringArrayFromDB(idStringArrayStrumento: String): List<String> {
-
-        //apro db
-        val dbHelper = MyDatabaseHelper(requireContext())
-        val db = dbHelper.readableDatabase
-
-        if(mappaValori.containsKey(idStringArrayStrumento)){
-            val jsonString = mappaValori.getValue(idStringArrayStrumento)[1]
-            db.close()
-            Log.i("msg", "prendo dato $idStringArrayStrumento da mappa")
-            return jsonStringtojsonArray(jsonString).toList()
-        }else {
-            // Definisci una proiezione che specifica quali colonne vuoi recuperare
-            val projection = arrayOf(
-                MyDatabaseHelper.FeedReaderContract.FeedEntry.COLUMN_NAME_ARRAY,
-                MyDatabaseHelper.FeedReaderContract.FeedEntry.COLUMN_NAME_PRESET
-            )
-
-            // Specifica le altre clausole della query, se necessario
-            val selection = "${MyDatabaseHelper.FeedReaderContract.FeedEntry.ID} = ?"
-            val selectionArgs = arrayOf(idStringArrayStrumento)
-
-            // Eseguire la query per recuperare i dati
-            val cursor = db.query(
-                MyDatabaseHelper.FeedReaderContract.FeedEntry.TABLE_NAME, // Tabella da cui recuperare i dati
-                projection, // Colonnes
-                selection, // Colonna di selezione
-                selectionArgs, // Argomenti di selezione
-                null, // Raggruppamento delle righe
-                null, // Filtro sugli altri gruppi di righe
-                null // Ordine di ordinamento
-            )
-
-            // Ora puoi scorrere il cursore per ottenere i risultati
-            return if (cursor.moveToNext()) {
-                val nomePreset =  cursor.getString(cursor.getColumnIndexOrThrow(MyDatabaseHelper.FeedReaderContract.FeedEntry.COLUMN_NAME_PRESET))
-                val jsonString = cursor.getString(cursor.getColumnIndexOrThrow(MyDatabaseHelper.FeedReaderContract.FeedEntry.COLUMN_NAME_ARRAY))
-                cursor.close()
-                db.close()
-                val elementToReturn = jsonStringtojsonArray(jsonString).toList()
-                mappaValori[idStringArrayStrumento] = listOf(nomePreset,jsonString)
-                elementToReturn
-            } else {
-                listOf()
-            }
-        }
-    }
-
-
-    private fun jsonStringtojsonArray(jsonString: String): Array<String> {
-        val jsonArrayRitorno = JSONArray(jsonString)
-        return Array(jsonArrayRitorno.length()) { jsonArrayRitorno.getString(it) }
-    }
-
-    private fun jsonArraytojsonString(stringArray: List<String>): String {
-        //converto stringArray in jsonString per salvare l'intero array
-        val jsonArray = JSONArray(stringArray)
-        return jsonArray.toString()
-    }
-
     private var attivazioneMICDI: Boolean = false
 
     /**
@@ -604,7 +402,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
             view.setOnLongClickListener {
 
                 attivazioneMICDI = when((view.parent as ViewGroup).id){
-                    R.id.group_batteria-> true
+                    R.id.group_check_chitarra-> true
                    R.id.group_percussioni-> true
                    R.id.group_tastiera-> true
                    else-> false
@@ -613,14 +411,14 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
                 val idStringArrayStrumento: String = view.id.toString()
 
                 //recupero dati
-                val stringArray = getStringArrayFromDB(idStringArrayStrumento)
+                val stringArray = dbmsBoundary.getStringArrayFromDB(idStringArrayStrumento)
 
                 //creo stringa contenente array incolonnato
                 val wordList = createStringIncolonnata(stringArray)
 
                 //creo popup informativo
                 val alertDialogBuilder = AlertDialog.Builder(requireContext(), R.style.RoundedCornersDialog)
-                alertDialogBuilder.setTitle(getString(R.string.info_1s, getNomePresetFromDB(view)))
+                alertDialogBuilder.setTitle(getString(R.string.info_1s, dbmsBoundary.getNomePresetFromDB(view)))
                 alertDialogBuilder.setMessage(wordList)
 
                 alertDialogBuilder.setNeutralButton("Modifica"){ _, _ ->
@@ -636,7 +434,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
                     val filterArray = arrayOf<InputFilter>(InputFilter.LengthFilter(50))
                     titleEditText.filters = filterArray
                     titleEditText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
-                    titleEditText.setText(getString(R.string.modifica_preset_s_1, getNomePresetFromDB(view)))
+                    titleEditText.setText(getString(R.string.modifica_preset_s_1, dbmsBoundary.getNomePresetFromDB(view)))
                     titleEditText.addTextChangedListener(object : TextWatcher {
 
                         private val startText = titleEditText.text.toString().split(": ")[0] + ": "
@@ -692,7 +490,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
                         val nomePreset = titleEditText.text.toString().split(": ")[1]
 
                         //salvo il nuovo nome del preset sia in locale che dinamicamente se diverso da quello precedente
-                        val titoloPreset = if(getNomePresetFromDB(view) != nomePreset){
+                        val titoloPreset = if(dbmsBoundary.getNomePresetFromDB(view) != nomePreset){
                             if(view is RadioButton){
                                 view.text = nomePreset
                             }else if(view is CheckBox){
@@ -709,10 +507,10 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
                         if(stringList.isNotEmpty() && stringList != stringArray){
                             Log.i("msg", "array diversi allora carico dati")
                             //aggiorno dati nel db
-                            updateDataOnDB(idStringArrayStrumento, titoloPreset, stringList)
+                            dbmsBoundary.updateDataOnDB(idStringArrayStrumento, titoloPreset, stringList)
                         }else if(titoloPreset.isNotEmpty()){
                             Log.i("msg", "solo titolo diverso carico dati")
-                            updateDataOnDB(idStringArrayStrumento, titoloPreset, listOf())
+                            dbmsBoundary.updateDataOnDB(idStringArrayStrumento, titoloPreset, listOf())
                         }else{
                             Toast.makeText(requireContext(), "non è stato cambiato nessun dato", Toast.LENGTH_SHORT).show()
                             return@setOnClickListener
@@ -742,7 +540,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
                     //creo popup informativo
                     val alertConfirmElimination = AlertDialog.Builder(requireContext())
                     alertConfirmElimination.setTitle("Conferma eliminazione")
-                        .setMessage(getString(R.string.sicuro_di_voler_eliminare, getNomePresetFromDB(view)))
+                        .setMessage(getString(R.string.sicuro_di_voler_eliminare, dbmsBoundary.getNomePresetFromDB(view)))
                         .setNegativeButton("Annulla"){ dialog: DialogInterface, _: Int ->
                             dialog.dismiss()
                         }
@@ -754,7 +552,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
                             }
 
                             //cancello view dal db
-                            deletePreset(view.id)
+                            dbmsBoundary.deletePreset(view.id)
 
                             dialog.dismiss()
                         }.create().show()
@@ -834,6 +632,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
         checkBox.setOnLongClickListener {
 
             attivazioneMICDI = when(checkBox.id){
+                R.id.checkboxChitarra -> true
                 R.id.checkBoxTastiera-> true
                 R.id.checkBoxPercussioni-> true
                 else-> false
@@ -917,7 +716,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
                             }
 
                             if(idGroup > 0){
-                                insertNewPresetOnDB(viewId,nomePreset, stringList, idGroup)
+                                dbmsBoundary.insertNewPresetOnDB(viewId,nomePreset, stringList, idGroup)
                             }
 
                             //creo check o radiobutton
@@ -974,7 +773,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
         tmpContainer.orientation = LinearLayout.HORIZONTAL
-        tmpContainer.setPadding(30,1,1,15)
+        tmpContainer.setPadding(40,1,10,20)
 
         //primo elemento della riga
         val layoutParams = LinearLayout.LayoutParams(
@@ -1045,105 +844,6 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
         editTextContainer.addView(tmpContainer) // Aggiungi la casella di testo al layout padre
         setScorrimento(tmpContainer)
     }
-
-    private fun insertNewPresetOnDB(randomId: Int, nomePreset: String, stringList: List<String>, @IdRes idGroup: Int) {
-        val jsonString = jsonArraytojsonString(stringList)
-
-        val values = ContentValues().apply {
-            put(MyDatabaseHelper.FeedReaderContract.FeedEntry.ID, randomId)
-            put(MyDatabaseHelper.FeedReaderContract.FeedEntry.COLUMN_NAME_PRESET, nomePreset)
-            put(MyDatabaseHelper.FeedReaderContract.FeedEntry.COLUMN_NAME_ARRAY, jsonString)
-            put(MyDatabaseHelper.FeedReaderContract.FeedEntry.GROUPS, idGroup)
-        }
-
-        val dbHelper = MyDatabaseHelper(requireContext())
-        val db = dbHelper.writableDatabase
-
-        //newRowId conterrà l'ID della nuova riga inserita, o -1 se si è verificato un errore durante l'inserimento
-        val newRowId = db.insert(MyDatabaseHelper.FeedReaderContract.FeedEntry.TABLE_NAME, null, values)
-
-        if(newRowId < 0){
-            Log.i("msg", "ERRORE INSERIMENTO VALORI QUERY")
-        }else{
-            Log.i("msg", "QUERY INSERITA CORRETTAMENTE")
-        }
-
-    }
-
-    private fun deletePreset(id: Int) {
-        if(id > 0){
-            val dbHelper = MyDatabaseHelper(requireContext())
-            val db = dbHelper.writableDatabase
-
-            val deletedRows = db.delete(MyDatabaseHelper.FeedReaderContract.FeedEntry.TABLE_NAME,
-                MyDatabaseHelper.FeedReaderContract.FeedEntry.ID + " = ?",
-                arrayOf(id.toString()))
-
-            if (deletedRows <= 0 || deletedRows > 1) {
-                Log.i("msg", "ERRORE ELIMINAZIONE PRESET")
-            }
-
-            db.close()
-        }
-        else{
-            Log.i("msg", "ERRORE: ID PRESET DA ELIMINARE NON VALIDO")
-        }
-    }
-
-    private fun updateDataOnDB(
-        id: String,
-        nomePreset: String,
-        stringList: List<String>
-    ) {
-        val dbHelper = MyDatabaseHelper(requireContext())
-        val db = dbHelper.writableDatabase
-
-        //aggiorno anche mappa di valori
-        val listUpdate = if(mappaValori.containsKey(id)){
-            mappaValori.getValue(id).toMutableList()
-        }else{
-            mutableListOf()
-        }
-
-        val jsonString = jsonArraytojsonString(stringList)
-        val values = ContentValues().apply {
-            if(nomePreset.isNotEmpty()){
-                put(MyDatabaseHelper.FeedReaderContract.FeedEntry.COLUMN_NAME_PRESET, nomePreset)
-                Log.i("msg", "titolo non vuoto inserisco valore")
-
-                listUpdate[0] = nomePreset
-            }
-
-            if(stringList.isNotEmpty()){
-                Log.i("msg", "lista non vuota inserisco valori")
-                put(MyDatabaseHelper.FeedReaderContract.FeedEntry.COLUMN_NAME_ARRAY, jsonString)
-
-                listUpdate[1] = jsonString
-            }
-        }
-
-        // Esegui l'aggiornamento
-        val numRowsUpdated = db.update(
-            MyDatabaseHelper.FeedReaderContract.FeedEntry.TABLE_NAME,
-            values, // Valori da aggiornare
-            MyDatabaseHelper.FeedReaderContract.FeedEntry.ID + " = ?", // Clausola WHERE per identificare la riga da aggiornare
-            arrayOf(id) // Valori dei segnaposto nella clausola WHERE
-        )
-
-        // Chiudi il database
-        db.close()
-
-        // Controlla il numero di righe aggiornate
-        if (numRowsUpdated < 1) {
-            Log.i("msg", "AGGIORNAMENTO FALLITO")
-        }else{
-            //aggiorno anche mappa di valori
-            if(listUpdate.size >= 2){
-                mappaValori[id] = listUpdate
-            }
-        }
-    }
-
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setScorrimento(linearLayout: LinearLayout) {

@@ -49,7 +49,7 @@
     <string name="salva">Salva</string>
     <string name="annulla">Annulla</string>
     <string name="aggiungi">Aggiungi</string>
-    <string name="titolo">Titolo</string>
+    <string name="titolo">    Titolo    </string>
     <string name="contenuto_scorrevole">contenuto scorrevole</string>
     <string name="tabulazioni">\t\t</string>
     <string name="modifica_preset_s_1">Modifica preset: %1$s</string>
