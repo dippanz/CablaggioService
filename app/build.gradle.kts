@@ -52,9 +52,4 @@ dependencies {
     implementation("org.apache.poi:poi:4.1.2")
     implementation("org.apache.poi:poi-ooxml:4.1.2")
     implementation("javax.xml.stream:stax-api:1.0-2")
-
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
-
-
-
 }

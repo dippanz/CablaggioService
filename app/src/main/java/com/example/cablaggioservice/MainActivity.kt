@@ -31,6 +31,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         val t = supportFragmentManager.beginTransaction()
+        t.addToBackStack("principale")
         t.replace(R.id.container_main, FragSezioni())
         t.commit()
 
@@ -143,7 +144,16 @@ class MainActivity : AppCompatActivity() {
                 sharedPreferences.edit().putBoolean(getString(R.string.dimic_attivo), !attivazioneMICDI).apply()
                 true
             }
-            // Aggiungi altre voci del menu, se necessario...
+
+            R.id.MENU_2 ->{
+                //info funzionamento app
+                Log.i("msg", "cambio contesto")
+                val t = supportFragmentManager.beginTransaction()
+                t.addToBackStack("info")
+                t.replace(R.id.container_main, FragInformazioni())
+                t.commit()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }

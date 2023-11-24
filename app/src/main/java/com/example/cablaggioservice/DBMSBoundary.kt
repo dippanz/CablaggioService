@@ -246,7 +246,7 @@ class DBMSBoundary(context: Context) {
             selectionArgs, // Argomenti di selezione
             null, // Raggruppamento delle righe
             null, // Filtro sugli altri gruppi di righe
-            null // Ordine di ordinamento
+            MyDatabaseHelper.FeedReaderContract.FeedEntry.COLUMN_NAME_PRESET + " ASC" // Ordine di ordinamento (ASC per ascendente)
         )
 
         val mutableList = mutableListOf<List<String>>()
@@ -268,7 +268,7 @@ class DBMSBoundary(context: Context) {
         return mutableList
     }
 
-    fun createCheckBoxFromDB(groupCheckChitarra: LinearLayout): List<String>{
+    fun createCheckBoxFromDB(groupCheckChitarra: LinearLayout): List<List<String>>{
         //apro db
         val db = dbHelper.readableDatabase
 
@@ -292,10 +292,10 @@ class DBMSBoundary(context: Context) {
             selectionArgs, // Argomenti di selezione
             null, // Raggruppamento delle righe
             null, // Filtro sugli altri gruppi di righe
-            null // Ordine di ordinamento
+            MyDatabaseHelper.FeedReaderContract.FeedEntry.COLUMN_NAME_PRESET + " ASC" // Ordine di ordinamento (ASC per ascendente)
         )
 
-        val mutableList = mutableListOf<String>()
+        val mutableList = mutableListOf<List<String>>()
 
         // Ora puoi scorrere il cursore per ottenere i risultati
         while (cursor.moveToNext()){
@@ -304,9 +304,7 @@ class DBMSBoundary(context: Context) {
             val jsonString = cursor.getString(cursor.getColumnIndexOrThrow(MyDatabaseHelper.FeedReaderContract.FeedEntry.COLUMN_NAME_ARRAY))
             val nomeGroup = cursor.getString(cursor.getColumnIndexOrThrow(MyDatabaseHelper.FeedReaderContract.FeedEntry.GROUPS))
 
-            mutableList.add(id)
-            mutableList.add(nomePreset)
-
+            mutableList.add(listOf(id, nomePreset))
             mappaValori[id] = listOf(nomePreset, jsonString, nomeGroup)
         }
 

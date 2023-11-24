@@ -61,6 +61,17 @@
     <string name="scelta_mic_e_di_attivata">Scelta MIC e DI attivata</string>
     <string name="dimic_attivo">DIMIC_attivo</string>
     <string name="aggiungi_un_valore">Aggiungi un valore</string>
+    <string name="attiva_disattiva_mic_e_di">Attiva/Disattiva MIC e DI</string>
+    <string name="come_funziona_l_app">Come funziona l\'app?</string>
+    <string name="informazioni_generali">Informazioni generali</string>
+    <string name="a_differenza_degli_altri_del_gruppo_chitarra_si_possono_selezionare_pi_voci_che_verranno_caricate_in_modo_separato">A differenza degli altri del gruppo chitarra si possono selezionare più voci che verranno caricate in modo separato</string>
+    <string name="il_gruppo_batteria_contiene_vari_preset_associati_a_quel_gruppo">Il gruppo batteria contiene vari preset associati a quel gruppo</string>
+    <string name="premendo_la_checkbox_si_possono_scegliere_i_preset_in_precedenza_caricati_basta_sceglierne_uno_per_poi_creare_la_channel_list">Premendo la checkbox si possono scegliere i preset in precedenza caricati, basta sceglierne uno per poi creare la channel list</string>
+    <string name="infine_premi_su_carica_canali_per_avere_la_tua_channel_list">Infine premi su carica canali per avere la tua channel list</string>
+    <string name="tenendo_premuto_sul_gruppo_possibile_aggiungere_dei_preset">Tenendo premuto sul gruppo è possibile aggiungere dei preset.</string>
+    <string name="schermata_per_impostare_un_preset_nella_parte_alta_si_pu_inserire_un_nome_nella_parte_bassa_vanno_inseriti_i_singoli_strumenti_che_verranno_caricati_come_parte_del_gruppo_per_salvare_il_preset_basta_premere_su_salva_invece_per_aggiungere_una_nuova_riga_basta_premere_su_aggiungi">Schermata per impostare un preset. Nella parte alta si può inserire un nome, nella parte bassa vanno inseriti i singoli strumenti che verranno caricati come parte del gruppo. Per salvare il preset basta premere su salva. Invece per aggiungere una nuova riga basta premere su aggiungi.</string>
+    <string name="tenendo_premuto_un_preset_si_potr_modificare_o_eliminare">Tenendo premuto un preset si potrà modificare o eliminare.</string>
+    <string name="premendo_su_elimina_verr_eliminato_il_preset_premendo_su_modifica_si_aprir_la_schermata_per_modificare_il_preset">Schermata di riepilogo preset. Premendo su elimina verrà eliminato il preset. Premendo su modifica si aprirà la schermata per modificare il preset simile a quella per crearlo.</string>
 
 
     <string-array name="batteria1String">

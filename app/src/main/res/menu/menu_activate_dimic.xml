@@ -3,6 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/MENU_1"
-        android:title="Attiva/Disattiva MIC e DI"
+        android:title="@string/attiva_disattiva_mic_e_di"
+        />
+    <item
+        android:id="@+id/MENU_2"
+        android:title="@string/come_funziona_l_app"
         />
 </menu>

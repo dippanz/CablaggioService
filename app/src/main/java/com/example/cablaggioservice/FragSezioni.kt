@@ -37,6 +37,7 @@ import androidx.fragment.app.Fragment
 import com.example.cablaggioservice.databinding.FragSezioniBinding
 import java.io.File
 import kotlin.math.abs
+import kotlin.random.Random
 
 class FragSezioni: Fragment(R.layout.frag_sezioni) {
 
@@ -130,11 +131,15 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
 
         //crea preset chitarra
         val list = dbmsBoundary.createCheckBoxFromDB(binding.groupCheckChitarra)
+        for(element in list){
+            val nomePreset = element[1]
+            val id = element[0]
 
-        //creo radioButton con specifiche sopra elencate
-        val checkBox = settingCheckBox(list[1], list[0])
-        binding.groupCheckChitarra.addView(checkBox)
-        setOnLongListenerPopup(checkBox)
+            //creo checkbox con specifiche sopra elencate
+            val checkBox = settingCheckBox(nomePreset, id)
+            binding.groupCheckChitarra.addView(checkBox)
+            setOnLongListenerPopup(checkBox)
+        }
 
         setOnLongListenerCreatePreset(binding.checkboxBatteria)
         setOnLongListenerCreatePreset(binding.checkBoxPercussioni)
@@ -167,9 +172,9 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
                 //creo i modelli batteria
                 for(i in stringArray.indices){
                     val model = if(i == 0){
-                        ModelChannelList("1", NAME_BATTERIA, stringArray[i],TYPE_MIC, "","","","","","")
+                        ModelChannelList("1", NAME_BATTERIA, stringArray[i].split(" %")[0],TYPE_MIC, "","","","","","")
                     }else{
-                        ModelChannelList("${i.plus(1)}", "", stringArray[i],TYPE_MIC, "","","","","","")
+                        ModelChannelList("${i.plus(1)}", "", stringArray[i].split(" %")[0],TYPE_MIC, "","","","","","")
                     }
                     modelList.add(model)
                 }
@@ -293,9 +298,9 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
                 //creo i modelli VOCI
                 for((i, id) in range.withIndex()){
                     val model = if(i == 0){
-                        ModelChannelList("${id.plus(1)}", NAME_VOCI, stringArray[i], TYPE_MIC, "","","","","","")
+                        ModelChannelList("${id.plus(1)}", NAME_VOCI, stringArray[i].split(" %")[0], TYPE_MIC, "","","","","","")
                     }else{
-                        ModelChannelList("${id.plus(1)}", "", stringArray[i],TYPE_MIC, "","","","","","")
+                        ModelChannelList("${id.plus(1)}", "", stringArray[i].split(" %")[0],TYPE_MIC, "","","","","","")
                     }
                     modelList.add(model)
                 }
@@ -318,9 +323,9 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
                 //creo i modelli CORI
                 for((i, id) in range.withIndex()){
                     val model = if(i == 0){
-                        ModelChannelList("${id.plus(1)}", NAME_CORI, stringArray[i], TYPE_MIC, "","","","","","")
+                        ModelChannelList("${id.plus(1)}", NAME_CORI, stringArray[i].split(" %")[0], TYPE_MIC, "","","","","","")
                     }else{
-                        ModelChannelList("${id.plus(1)}", "", stringArray[i],TYPE_MIC, "","","","","","")
+                        ModelChannelList("${id.plus(1)}", "", stringArray[i].split(" %")[0],TYPE_MIC, "","","","","","")
                     }
                     modelList.add(model)
                 }
@@ -445,7 +450,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
                             p2: Int,
                             p3: Int
                         ) {
-                            Log.i("msg", startText)
+                            //Log.i("msg", startText)
                         }
 
                         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -589,7 +594,10 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
             if(e is LinearLayout ){
                 val editText = e.getChildAt(0) as EditText
 
-                if(attivazioneMICDI){
+                val sharedPreferences = requireContext().getSharedPreferences("preset", Context.MODE_PRIVATE)
+                val attivazioneMICDItmp = sharedPreferences.getBoolean(getString(R.string.dimic_attivo), true)
+
+                if(attivazioneMICDI && attivazioneMICDItmp){
                     val radioGroup = e.getChildAt(1) as RadioGroup
 
                     if(editText.length() != 0 && radioGroup.checkedRadioButtonId != -1) {
@@ -605,9 +613,9 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
                     }
 
                 }else if(editText.length() != 0){
-                    stringList.add("${editText.text}")
+                    stringList.add("${editText.text} %MIC")
                 }else{
-                    stringList.add("${editText.hint}")
+                    stringList.add("${editText.hint} %MIC")
                 }
 
                 //controllo se non sia un nuovo valore
@@ -661,7 +669,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
                             p2: Int,
                             p3: Int
                         ) {
-                            Log.i("msg", startText)
+                            //Log.i("msg", startText)
                         }
 
                         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -704,7 +712,12 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
                         }else if(stringList.isEmpty()) {
                             Toast.makeText(requireContext(), "inserire i dati", Toast.LENGTH_SHORT).show()
                         }else{
-                            val viewId = View.generateViewId()
+                            val systemTimeMillis = System.currentTimeMillis()
+                            val viewId = {
+                                val random = Random(systemTimeMillis)
+                                random.nextInt(Integer.MAX_VALUE)
+                            }
+
                             val idGroup = when(checkBox.id){
                                 R.id.checkboxBatteria -> { R.id.group_batteria }
                                 R.id.checkBoxPercussioni -> { R.id.group_percussioni }
@@ -716,16 +729,16 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
                             }
 
                             if(idGroup > 0){
-                                dbmsBoundary.insertNewPresetOnDB(viewId,nomePreset, stringList, idGroup)
+                                dbmsBoundary.insertNewPresetOnDB(viewId(),nomePreset, stringList, idGroup)
                             }
 
                             //creo check o radiobutton
                             if(idGroup == R.id.group_check_chitarra){
-                                val checkBoxView = settingCheckBox(nomePreset, viewId.toString())
+                                val checkBoxView = settingCheckBox(nomePreset, viewId().toString())
                                 setOnLongListenerPopup(checkBoxView)
                                 binding.root.findViewById<LinearLayout>(idGroup).addView(checkBoxView)
                             }else{
-                                val radioButton = settingRadioButton(nomePreset, viewId.toString())
+                                val radioButton = settingRadioButton(nomePreset, viewId().toString())
                                 setOnLongListenerPopup(radioButton)
                                 binding.root.findViewById<RadioGroup>(idGroup).addView(radioButton)
                             }
