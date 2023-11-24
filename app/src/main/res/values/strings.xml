@@ -45,15 +45,15 @@
     <string name="ok">OK</string>
     <string name="modifica">Modifica</string>
     <string name="info_preset">INFO PRESET</string>
-    <string name="info_1s">INFO %1$s</string>
+    <string name="info_1s">%1$s</string>
     <string name="salva">Salva</string>
     <string name="annulla">Annulla</string>
     <string name="aggiungi">Aggiungi</string>
-    <string name="titolo">    Titolo    </string>
+    <string name="titolo">Titolo</string>
     <string name="contenuto_scorrevole">contenuto scorrevole</string>
     <string name="tabulazioni">\t\t</string>
-    <string name="modifica_preset_s_1">Modifica preset: %1$s</string>
-    <string name="nome_preset_s_1">Nuovo nome preset: %1$s</string>
+    <string name="modifica_preset_s_1">%1$s</string>
+    <string name="nome_preset_s_1">Nuovo nome preset</string>
     <string name="sicuro_di_voler_eliminare">Sicuro di voler eliminare %1$s?</string>
     <string name="di">D.I.</string>
     <string name="mic">MIC</string>
@@ -72,6 +72,7 @@
     <string name="schermata_per_impostare_un_preset_nella_parte_alta_si_pu_inserire_un_nome_nella_parte_bassa_vanno_inseriti_i_singoli_strumenti_che_verranno_caricati_come_parte_del_gruppo_per_salvare_il_preset_basta_premere_su_salva_invece_per_aggiungere_una_nuova_riga_basta_premere_su_aggiungi">Schermata per impostare un preset. Nella parte alta si può inserire un nome, nella parte bassa vanno inseriti i singoli strumenti che verranno caricati come parte del gruppo. Per salvare il preset basta premere su salva. Invece per aggiungere una nuova riga basta premere su aggiungi.</string>
     <string name="tenendo_premuto_un_preset_si_potr_modificare_o_eliminare">Tenendo premuto un preset si potrà modificare o eliminare.</string>
     <string name="premendo_su_elimina_verr_eliminato_il_preset_premendo_su_modifica_si_aprir_la_schermata_per_modificare_il_preset">Schermata di riepilogo preset. Premendo su elimina verrà eliminato il preset. Premendo su modifica si aprirà la schermata per modificare il preset simile a quella per crearlo.</string>
+    <string name="schermata_di_modifica_dentro_la_quale_possibile_cambiare_i_vecchi_dati_inseriti_aggiungere_una_nuova_riga_premendo_l_apposito_bottone_o_eliminare_una_riga_facendo_swipe_verso_destra_per_la_riga_che_si_vuole_eliminiare">Schermata di modifica dentro la quale è possibile cambiare i vecchi dati inseriti, aggiungere una nuova riga premendo l\'apposito bottone o eliminare una riga facendo swipe verso destra per la riga che si vuole eliminiare.</string>
 
 
     <string-array name="batteria1String">

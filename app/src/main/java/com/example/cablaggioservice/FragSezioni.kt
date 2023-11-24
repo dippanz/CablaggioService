@@ -10,6 +10,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.provider.ContactsContract.CommonDataKinds.StructuredName
 import android.text.Editable
 import android.text.InputFilter
 import android.text.InputType
@@ -42,7 +43,9 @@ import kotlin.random.Random
 class FragSezioni: Fragment(R.layout.frag_sezioni) {
 
     companion object {
-        private const val MAX_WIDTH = 155
+        private const val MAX_WIDTH = 150
+        private const val MAX_WIDTH_TABLET = 250
+        private const val DIMENSIONE_TABLET_MINIMA = 600
         private const val MAX_HEIGHT = 130
         private const val NAME_BATTERIA = "BATTERIA"
         private const val NAME_PERCUSSIONI = "PERCUSSIONI"
@@ -54,6 +57,10 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
         private const val NAME_SAX = "SAX"
         private const val TYPE_MIC = "MIC"
         private const val TYPE_DI = "D.I."
+        private const val MAX_TITLE_PRESET = 30
+        private const val DURATA_ANIMAZIONE = 400L
+        private const val TEXT_SIZE = 15f
+        private const val SCALE_RADIO_BUTTON = 0.85f
     }
 
     /**
@@ -70,7 +77,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
         view.startAnimation(shakeAnimation)
 
         val animator = ObjectAnimator.ofFloat(view, View.TRANSLATION_X, endPosition)
-        animator.duration = 400
+        animator.duration = DURATA_ANIMAZIONE
         animator.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator) {
                 // Rimuovi l'EditText dal layout dopo l'animazione
@@ -371,7 +378,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
     private fun settingCheckBox(nomePreset: String, id: String): CheckBox{
         val checkBox = CheckBox(requireContext())
         checkBox.id = id.toInt()
-        checkBox.textSize = 15f
+        checkBox.textSize = TEXT_SIZE
         checkBox.text = nomePreset
         val layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -384,7 +391,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
     private fun settingRadioButton(nomePreset: String, id: String): RadioButton{
         val radioButton = RadioButton(requireContext())
         radioButton.id = id.toInt()
-        radioButton.textSize = 15f
+        radioButton.textSize = TEXT_SIZE
         radioButton.text = nomePreset
         val layoutParams = RadioGroup.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -401,8 +408,6 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
      */
     private fun setOnLongListenerPopup(view: View){
         if(view is RadioButton || view is CheckBox){
-            Log.i("msg","setto onLongListener")
-
             // Verifica se l'elemento è un RadioButton
             view.setOnLongClickListener {
 
@@ -436,11 +441,11 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
                     dialogBuilder.setContentView(rootView)
 
                     val titleEditText = rootView.findViewById<EditText>(R.id.textViewTitle)
-                    val filterArray = arrayOf<InputFilter>(InputFilter.LengthFilter(50))
+                    val filterArray = arrayOf<InputFilter>(InputFilter.LengthFilter(MAX_TITLE_PRESET))
                     titleEditText.filters = filterArray
                     titleEditText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
-                    titleEditText.setText(getString(R.string.modifica_preset_s_1, dbmsBoundary.getNomePresetFromDB(view)))
-                    titleEditText.addTextChangedListener(object : TextWatcher {
+                    titleEditText.hint = getString(R.string.modifica_preset_s_1, dbmsBoundary.getNomePresetFromDB(view))
+                    /*titleEditText.addTextChangedListener(object : TextWatcher {
 
                         private val startText = titleEditText.text.toString().split(": ")[0] + ": "
 
@@ -474,7 +479,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
                                 editable?.insert(startText.length, " ")
                             }
                         }
-                    })
+                    })*/
 
                     val editTextContainer = rootView.findViewById<LinearLayout>(R.id.container_editText)
 
@@ -492,10 +497,14 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
 
                     saveButton.setOnClickListener {
                         //prendo il nuovo nomePreset
-                        val nomePreset = titleEditText.text.toString().split(": ")[1]
+                        val nomePreset: String = titleEditText.text.toString().ifEmpty {
+                            titleEditText.hint.toString()
+                        }
+
+
 
                         //salvo il nuovo nome del preset sia in locale che dinamicamente se diverso da quello precedente
-                        val titoloPreset = if(dbmsBoundary.getNomePresetFromDB(view) != nomePreset){
+                        val titoloPreset: String = if(dbmsBoundary.getNomePresetFromDB(view) != nomePreset){
                             if(view is RadioButton){
                                 view.text = nomePreset
                             }else if(view is CheckBox){
@@ -513,11 +522,16 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
                             Log.i("msg", "array diversi allora carico dati")
                             //aggiorno dati nel db
                             dbmsBoundary.updateDataOnDB(idStringArrayStrumento, titoloPreset, stringList)
-                        }else if(titoloPreset.isNotEmpty()){
+                        }else if(titoloPreset.isNotEmpty() && stringList.isNotEmpty()){
                             Log.i("msg", "solo titolo diverso carico dati")
                             dbmsBoundary.updateDataOnDB(idStringArrayStrumento, titoloPreset, listOf())
                         }else{
-                            Toast.makeText(requireContext(), "non è stato cambiato nessun dato", Toast.LENGTH_SHORT).show()
+                            if(stringList.isEmpty()){
+                                Toast.makeText(requireContext(), "aggiungere valori mancanti", Toast.LENGTH_SHORT).show()
+                            }else{
+                                Toast.makeText(requireContext(), "non è stato cambiato nessun dato", Toast.LENGTH_SHORT).show()
+                            }
+
                             return@setOnClickListener
                         }
 
@@ -654,12 +668,12 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
             dialogBuilder.setContentView(rootView)
 
             val titleEditText = rootView.findViewById<EditText>(R.id.textViewTitle)
-            val filterArray = arrayOf<InputFilter>(InputFilter.LengthFilter(50))
+            val filterArray = arrayOf<InputFilter>(InputFilter.LengthFilter(MAX_TITLE_PRESET))
             titleEditText.filters = filterArray
             titleEditText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
 
-            titleEditText.setText(getString(R.string.nome_preset_s_1, ""))
-            titleEditText.addTextChangedListener(object : TextWatcher {
+            titleEditText.hint = getString(R.string.nome_preset_s_1)
+            /*titleEditText.addTextChangedListener(object : TextWatcher {
 
                         private val startText = titleEditText.text.toString().split(": ")[0] + ": "
 
@@ -693,7 +707,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
                                 editable?.insert(startText.length, " ")
                             }
                         }
-                    })
+                    })*/
 
                     val editTextContainer = rootView.findViewById<LinearLayout>(R.id.container_editText)
 
@@ -703,7 +717,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
 
                     saveButton.setOnClickListener {
                         //prendo il nuovo nomePreset
-                        val nomePreset = titleEditText.text.toString().split(": ")[1]
+                        val nomePreset = titleEditText.text.toString()
 
                         val stringList = saveModifichePopup(editTextContainer)
 
@@ -796,7 +810,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
         layoutParams.weight = 1f // Imposta il peso maggiore per la EditText
         val editText = CustomEditText(requireContext())
         editText.id = View.generateViewId()
-        val filterArray = arrayOf<InputFilter>(InputFilter.LengthFilter(50))
+        val filterArray = arrayOf<InputFilter>(InputFilter.LengthFilter(MAX_TITLE_PRESET))
         editText.filters = filterArray
         editText.setBackgroundColor(
             resources.getColor(
@@ -826,10 +840,10 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
             // Assegna un ID univoco alle RadioButton
             radioButton1.id = View.generateViewId()
             radioButton2.id = View.generateViewId()
-            radioButton1.scaleX = 0.85f
-            radioButton1.scaleY = 0.85f
-            radioButton2.scaleX = 0.85f
-            radioButton2.scaleY = 0.85f
+            radioButton1.scaleX = SCALE_RADIO_BUTTON
+            radioButton1.scaleY = SCALE_RADIO_BUTTON
+            radioButton2.scaleX = SCALE_RADIO_BUTTON
+            radioButton2.scaleY = SCALE_RADIO_BUTTON
 
             // Imposta il testo delle RadioButton
             radioButton1.text = getString(R.string.di)
@@ -946,7 +960,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
             if(binding.checkboxBatteria.isChecked){
                 binding.imageButtonBatteria.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.baseline_arrow_drop_down_48, null))
                 binding.scrollViewBatteria.visibility = View.VISIBLE
-                adattaBatteria()
+                adattaView(binding.scrollViewBatteria)
             }else{
                 binding.imageButtonBatteria.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.baseline_arrow_right_48, null))
                 binding.scrollViewBatteria.visibility = View.GONE
@@ -961,7 +975,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
             }else if(binding.checkboxBatteria.isChecked){
                 binding.imageButtonBatteria.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.baseline_arrow_drop_down_48, null))
                 binding.scrollViewBatteria.visibility = View.VISIBLE
-                adattaBatteria()
+                adattaView(binding.scrollViewBatteria)
             }
         }
 
@@ -969,7 +983,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
             if(binding.checkBoxPercussioni.isChecked){
                 binding.imageButtonPercussioni.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.baseline_arrow_drop_down_48, null))
                 binding.scrollViewPercussioni.visibility = View.VISIBLE
-                adattaPercussioni()
+                adattaView(binding.scrollViewPercussioni)
             }else{
                 binding.imageButtonPercussioni.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.baseline_arrow_right_48, null))
                 binding.scrollViewPercussioni.visibility = View.GONE
@@ -984,7 +998,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
             }else if(binding.checkBoxPercussioni.isChecked){
                 binding.imageButtonPercussioni.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.baseline_arrow_drop_down_48, null))
                 binding.scrollViewPercussioni.visibility = View.VISIBLE
-                adattaPercussioni()
+                adattaView(binding.scrollViewPercussioni)
             }
         }
 
@@ -992,7 +1006,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
             if(binding.checkBoxTastiera.isChecked){
                 binding.imageButtonTastiera.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.baseline_arrow_drop_down_48, null))
                 binding.scrollViewTastiera.visibility = View.VISIBLE
-                adattaTastiera()
+                adattaView(binding.scrollViewTastiera)
             }else{
                 binding.imageButtonTastiera.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.baseline_arrow_right_48, null))
                 binding.scrollViewTastiera.visibility = View.GONE
@@ -1007,7 +1021,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
             }else if(binding.checkBoxTastiera.isChecked){
                 binding.imageButtonTastiera.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.baseline_arrow_drop_down_48, null))
                 binding.scrollViewTastiera.visibility = View.VISIBLE
-                adattaTastiera()
+                adattaView(binding.scrollViewTastiera)
             }
         }
 
@@ -1015,7 +1029,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
             if(binding.checkboxChitarra.isChecked){
                 binding.imageButtonChitarra.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.baseline_arrow_drop_down_48, null))
                 binding.scrollViewChitarra.visibility = View.VISIBLE
-                adattaChitarra()
+                adattaView(binding.scrollViewChitarra)
             }else{
                 binding.imageButtonChitarra.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.baseline_arrow_right_48, null))
                 binding.scrollViewChitarra.visibility = View.GONE
@@ -1030,7 +1044,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
             }else if(binding.checkboxChitarra.isChecked){
                 binding.imageButtonChitarra.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.baseline_arrow_drop_down_48, null))
                 binding.scrollViewChitarra.visibility = View.VISIBLE
-                adattaChitarra()
+                adattaView(binding.scrollViewChitarra)
             }
         }
 
@@ -1038,7 +1052,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
             if(binding.checkBoxVoci.isChecked){
                 binding.imageButtonVoci.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.baseline_arrow_drop_down_48, null))
                 binding.scrollViewVoci.visibility = View.VISIBLE
-                adattaVoci()
+                adattaView(binding.scrollViewVoci)
             }else{
                 binding.imageButtonVoci.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.baseline_arrow_right_48, null))
                 binding.scrollViewVoci.visibility = View.GONE
@@ -1053,7 +1067,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
             }else if(binding.checkBoxVoci.isChecked){
                 binding.imageButtonVoci.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.baseline_arrow_drop_down_48, null))
                 binding.scrollViewVoci.visibility = View.VISIBLE
-                adattaVoci()
+                adattaView(binding.scrollViewVoci)
             }
         }
 
@@ -1061,7 +1075,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
             if(binding.checkBoxCori.isChecked){
                 binding.imageButtonCori.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.baseline_arrow_drop_down_48, null))
                 binding.scrollViewCori.visibility = View.VISIBLE
-                adattaCori()
+                adattaView(binding.scrollViewCori)
             }else{
                 binding.imageButtonCori.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.baseline_arrow_right_48, null))
                 binding.scrollViewCori.visibility = View.GONE
@@ -1076,7 +1090,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
             }else if(binding.checkBoxCori.isChecked){
                 binding.imageButtonCori.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.baseline_arrow_drop_down_48, null))
                 binding.scrollViewCori.visibility = View.VISIBLE
-                adattaCori()
+                adattaView(binding.scrollViewCori)
             }
         }
 
@@ -1093,25 +1107,28 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
         }
     }
 
-    private fun adattaBatteria(){
-        val batteria = binding.scrollViewBatteria
-        Log.i("msg", batteria.height.toString())
-        val altezza = calculateScrollViewHeight(batteria)
-
-        // Imposta l'altezza massima a 144dp
+    private fun adattaView(view: NestedScrollView){
+        val altezza = calculateScrollViewHeight(view)
+        // Imposta l'altezza massima
         if (altezza > dpToPx() || altezza == 0) {
             val maxHeight = dpToPx()
-            val params = batteria.layoutParams
+            val params = view.layoutParams
             params.height = maxHeight
-            batteria.layoutParams = params
+            view.layoutParams = params
         }
 
-        val larghezza = calcolaWidthMax(batteria)
-        if(larghezza > dpToPx(MAX_WIDTH)){
-            val maxWidth = dpToPx(MAX_WIDTH)
-            val params = batteria.layoutParams
+        val larghezzaMassima = if(resources.configuration.smallestScreenWidthDp >= DIMENSIONE_TABLET_MINIMA){
+            MAX_WIDTH_TABLET
+        }else{
+            MAX_WIDTH
+        }
+
+        val larghezza = calcolaWidthMax(view)
+        if(larghezza > dpToPx(larghezzaMassima) || larghezza == 0){
+            val maxWidth = dpToPx(larghezzaMassima)
+            val params = view.layoutParams
             params.width = maxWidth
-            batteria.layoutParams = params
+            view.layoutParams = params
         }
     }
 
@@ -1126,123 +1143,17 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
         return maxWidth
     }
 
-    private fun adattaPercussioni(){
-        val batteria = binding.scrollViewPercussioni
-        Log.i("msg", batteria.height.toString())
-        val altezza = calculateScrollViewHeight(batteria)
-
-        // Imposta l'altezza massima a 144dp
-        if (altezza > dpToPx() || altezza == 0) {
-            val maxHeight = dpToPx()
-            val params = batteria.layoutParams
-            params.height = maxHeight
-            batteria.layoutParams = params
-        }
-
-        val larghezza = calcolaWidthMax(batteria)
-        if(larghezza > dpToPx(MAX_WIDTH)){
-            val maxWidth = dpToPx(MAX_WIDTH)
-            val params = batteria.layoutParams
-            params.width = maxWidth
-            batteria.layoutParams = params
-        }
-    }
-
-    private fun adattaTastiera(){
-        val batteria = binding.scrollViewTastiera
-        val altezza = calculateScrollViewHeight(batteria)
-
-        // Imposta l'altezza massima
-        if (altezza > dpToPx() || altezza == 0) {
-            val maxHeight = dpToPx()
-            val params = batteria.layoutParams
-            params.height = maxHeight
-            batteria.layoutParams = params
-        }
-
-        val larghezza = calcolaWidthMax(batteria)
-        Log.i("msg", batteria.width.toString())
-        if(larghezza > dpToPx(MAX_WIDTH) || larghezza == 0){
-            val maxWidth = dpToPx(MAX_WIDTH)
-            val params = batteria.layoutParams
-            params.width = maxWidth
-            batteria.layoutParams = params
-        }
-    }
-
-    private fun adattaChitarra(){
-        val batteria = binding.scrollViewChitarra
-        Log.i("msg", batteria.height.toString())
-        val altezza = calculateScrollViewHeight(batteria)
-
-        // Imposta l'altezza massima a 144dp
-        if (altezza > dpToPx() || altezza == 0) {
-            val maxHeight = dpToPx()
-            val params = batteria.layoutParams
-            params.height = maxHeight
-            batteria.layoutParams = params
-        }
-
-        val larghezza = calcolaWidthMax(batteria)
-        if(larghezza > dpToPx(MAX_WIDTH) || larghezza == 0){
-            val maxWidth = dpToPx(MAX_WIDTH)
-            val params = batteria.layoutParams
-            params.width = maxWidth
-            batteria.layoutParams = params
-        }
-    }
-
-    private fun adattaVoci(){
-        val batteria = binding.scrollViewVoci
-        Log.i("msg", batteria.height.toString())
-        val altezza = calculateScrollViewHeight(batteria)
-
-        // Imposta l'altezza massima a 144dp
-        if (altezza > dpToPx() || altezza == 0) {
-            val maxHeight = dpToPx()
-            val params = batteria.layoutParams
-            params.height = maxHeight
-            batteria.layoutParams = params
-        }
-
-        val larghezza = calcolaWidthMax(batteria)
-        if(larghezza > dpToPx(MAX_WIDTH) || larghezza == 0){
-            val maxWidth = dpToPx(MAX_WIDTH)
-            val params = batteria.layoutParams
-            params.width = maxWidth
-            batteria.layoutParams = params
-        }
-    }
-
-    private fun adattaCori(){
-        val batteria = binding.scrollViewCori
-        Log.i("msg", batteria.height.toString())
-        val altezza = calculateScrollViewHeight(batteria)
-
-        // Imposta l'altezza massima a 144dp
-        if (altezza > dpToPx() || altezza == 0) {
-            val maxHeight = dpToPx()
-            val params = batteria.layoutParams
-            params.height = maxHeight
-            batteria.layoutParams = params
-        }
-
-        val larghezza = calcolaWidthMax(batteria)
-        if(larghezza > dpToPx(MAX_WIDTH) || larghezza == 0){
-            val maxWidth = dpToPx(MAX_WIDTH)
-            val params = batteria.layoutParams
-            params.width = maxWidth
-            batteria.layoutParams = params
-        }
-    }
-
-    // Funzione per convertire dp in pixel
+    /**
+     * Funzione per convertire dp in pixel
+     */
     private fun dpToPx(dp: Int = MAX_HEIGHT): Int {
         val scale = resources.displayMetrics.density
         return (dp * scale + 0.5f).toInt()
     }
 
-    // Funzione per calcolare l'altezza del LinearLayout
+   /**
+    * Funzione per calcolare l'altezza del LinearLayout
+    * */
     private fun calculateScrollViewHeight(nestedScrollView: NestedScrollView): Int {
         var totalHeight = 0
         for (i in 0 until nestedScrollView.childCount) {

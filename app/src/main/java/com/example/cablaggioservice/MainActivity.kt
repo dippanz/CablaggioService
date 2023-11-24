@@ -146,13 +146,16 @@ class MainActivity : AppCompatActivity() {
             }
 
             R.id.MENU_2 ->{
-                //info funzionamento app
-                Log.i("msg", "cambio contesto")
-                val t = supportFragmentManager.beginTransaction()
-                t.addToBackStack("info")
-                t.replace(R.id.container_main, FragInformazioni())
-                t.commit()
+                if(supportFragmentManager.backStackEntryCount < 2){
+                    //info funzionamento app
+                    Log.i("msg", "cambio contesto")
+                    val t = supportFragmentManager.beginTransaction()
+                    t.addToBackStack("info")
+                    t.replace(R.id.container_main, FragInformazioni())
+                    t.commit()
+                }
                 true
+
             }
             else -> super.onOptionsItemSelected(item)
         }

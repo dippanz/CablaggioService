@@ -66,31 +66,33 @@
             android:id="@+id/checkboxBatteria"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="140dp"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="80dp"
             android:text="@string/batteria"
+            android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/imageButtonBatteria"
             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
         <CheckBox
             android:id="@+id/checkboxChitarra"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="140dp"
-            android:layout_marginTop="68dp"
+            android:layout_marginTop="80dp"
             android:text="@string/chitarra"
+            android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/checkboxBatteria"
             app:layout_constraintTop_toBottomOf="@id/barrier1" />
 
         <ImageButton
             android:id="@+id/imageButtonBatteria"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:contentDescription="@string/image"
+            android:layout_marginEnd="90dp"
             android:background="@color/trasparente"
-            app:layout_constraintStart_toEndOf="@+id/checkboxBatteria"
+            android:contentDescription="@string/image"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/textView"
             app:layout_constraintTop_toTopOf="@+id/checkboxBatteria"
             app:srcCompat="@drawable/baseline_arrow_right_48" />
 
@@ -98,20 +100,21 @@
             android:id="@+id/checkBoxPercussioni"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="272dp"
+            android:layout_marginStart="90dp"
             android:text="@string/percussioni"
+            android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/imageButtonBatteria"
+            app:layout_constraintStart_toEndOf="@+id/textView"
             app:layout_constraintTop_toTopOf="@+id/checkboxBatteria" />
 
         <CheckBox
             android:id="@+id/checkBoxTastiera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="320dp"
             android:text="@string/tastiera"
+            android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/checkboxChitarra"
+            app:layout_constraintStart_toStartOf="@+id/checkBoxPercussioni"
             app:layout_constraintTop_toTopOf="@+id/checkboxChitarra" />
 
         <androidx.core.widget.NestedScrollView
@@ -127,9 +130,7 @@
             <RadioGroup
                 android:id="@+id/group_tastiera"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-            </RadioGroup>
+                android:layout_height="wrap_content"></RadioGroup>
         </androidx.core.widget.NestedScrollView>
 
         <androidx.core.widget.NestedScrollView
@@ -165,51 +166,50 @@
             <RadioGroup
                 android:id="@+id/group_batteria"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            </RadioGroup>
+                android:layout_height="wrap_content" />
         </androidx.core.widget.NestedScrollView>
 
         <CheckBox
             android:id="@+id/checkBoxCori"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="344dp"
-            android:layout_marginTop="68dp"
             android:text="@string/cori"
+            android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/checkBoxVoci"
-            app:layout_constraintTop_toBottomOf="@+id/barrier2" />
+            app:layout_constraintStart_toStartOf="@+id/checkBoxTastiera"
+            app:layout_constraintTop_toTopOf="@+id/checkBoxVoci" />
 
         <CheckBox
             android:id="@+id/checkBoxSax"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="140dp"
+            android:layout_marginTop="80dp"
             android:text="@string/sax"
+            android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/checkBoxBasso" />
+            app:layout_constraintStart_toStartOf="@+id/checkBoxVoci"
+            app:layout_constraintTop_toBottomOf="@+id/barrier3" />
 
         <CheckBox
             android:id="@+id/checkBoxVoci"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="140dp"
+            android:layout_marginTop="80dp"
             android:text="@string/voci"
+            android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/checkBoxCori" />
+            app:layout_constraintStart_toStartOf="@+id/checkboxChitarra"
+            app:layout_constraintTop_toBottomOf="@+id/barrier2" />
 
         <CheckBox
             android:id="@+id/checkBoxBasso"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="348dp"
-            android:layout_marginTop="68dp"
             android:text="@string/basso"
+            android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/checkBoxSax"
-            app:layout_constraintTop_toBottomOf="@+id/barrier3" />
+            app:layout_constraintStart_toStartOf="@+id/checkBoxCori"
+            app:layout_constraintTop_toTopOf="@+id/checkBoxSax" />
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/barrier1"
@@ -232,10 +232,9 @@
             android:layout_marginTop="28dp"
             android:text="@string/canali"
             android:textColor="@color/black"
-            android:textSize="24sp"
+            android:textSize="26sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/checkBoxPercussioni"
-            app:layout_constraintHorizontal_bias="0.8"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -310,8 +309,7 @@
             android:text="@string/carica_canali"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/checkBoxBasso"
-            app:layout_constraintHorizontal_bias="0.836"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/checkBoxBasso"
             app:layout_constraintVertical_bias="0.0" />
