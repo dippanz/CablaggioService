@@ -9,4 +9,8 @@
         android:id="@+id/MENU_2"
         android:title="@string/come_funziona_l_app"
         />
+    <item
+        android:id="@+id/MENU_3"
+        android:title="@string/info_e_contatti"
+        />
 </menu>

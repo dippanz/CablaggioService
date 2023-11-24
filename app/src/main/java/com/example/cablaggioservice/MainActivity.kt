@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.example.cablaggioservice.databinding.ActivityMainBinding
 import org.json.JSONArray
+import kotlin.concurrent.fixedRateTimer
 
 
 class MainActivity : AppCompatActivity() {
@@ -32,7 +33,7 @@ class MainActivity : AppCompatActivity() {
 
         val t = supportFragmentManager.beginTransaction()
         t.addToBackStack("principale")
-        t.replace(R.id.container_main, FragSezioni())
+        t.replace(R.id.container_main, FragSezioni(), TAG_FRAGMENT_SEZIONI)
         t.commit()
 
         //creo gli sharedPreferences di default
@@ -127,6 +128,12 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    companion object{
+        private const val TAG_FRAGMENT_INFO = "info"
+        private const val TAG_FRAGMENT_CONTATTI = "contatti"
+        private const val TAG_FRAGMENT_SEZIONI = "principale"
+    }
+
     // Gestisci l'azione quando un elemento del menu viene selezionato
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -136,7 +143,7 @@ class MainActivity : AppCompatActivity() {
                 if(attivazioneMICDI){
                     Toast.makeText(applicationContext,
                         getString(R.string.scelta_mic_e_di_disattivata), Toast.LENGTH_SHORT).show()
-                }else{
+                } else {
                     Toast.makeText(applicationContext,
                         getString(R.string.scelta_mic_e_di_attivata), Toast.LENGTH_SHORT).show()
                 }
@@ -145,21 +152,73 @@ class MainActivity : AppCompatActivity() {
                 true
             }
 
-            R.id.MENU_2 ->{
-                if(supportFragmentManager.backStackEntryCount < 2){
-                    //info funzionamento app
-                    Log.i("msg", "cambio contesto")
+            R.id.MENU_2 -> {
+                val aggiungi = if(supportFragmentManager.backStackEntryCount < 2) {
+                    true
+                } else {
+                    val frag = supportFragmentManager.findFragmentByTag(TAG_FRAGMENT_CONTATTI)
+
+                    if(frag != null){
+                        supportFragmentManager.popBackStack()
+                        true
+                    } else {
+                        false
+                    }
+                }
+
+                if(aggiungi) {
                     val t = supportFragmentManager.beginTransaction()
-                    t.addToBackStack("info")
-                    t.replace(R.id.container_main, FragInformazioni())
+                    t.addToBackStack(TAG_FRAGMENT_INFO)
+                    t.replace(R.id.container_main, FragInformazioni(), TAG_FRAGMENT_INFO)
                     t.commit()
                 }
-                true
 
+                true
             }
+
+            R.id.MENU_3 -> {
+                val aggiungi = if(supportFragmentManager.backStackEntryCount < 2) {
+                    true
+                } else {
+                    val frag = supportFragmentManager.findFragmentByTag(TAG_FRAGMENT_INFO)
+
+                    if(frag != null){
+                        supportFragmentManager.popBackStack()
+                        true
+                    } else {
+                        false
+                    }
+                }
+
+                if(aggiungi) {
+                    val t = supportFragmentManager.beginTransaction()
+                    t.addToBackStack(TAG_FRAGMENT_CONTATTI)
+                    t.replace(R.id.container_main, FragContatti(), TAG_FRAGMENT_CONTATTI)
+                    t.commit()
+                }
+
+                true
+            }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        // Ottieni il fragment attualmente visualizzato
+        val fragmentAttuale = supportFragmentManager.findFragmentById(R.id.container_main)
+
+        // Verifica se il fragment è quello specifico per cui desideri chiudere l'app
+        if (fragmentAttuale is FragSezioni) {
+            // Chiudi direttamente l'app solo se il fragment è quello specifico
+            finish()
+        } else {
+            // Lascia che il normale flusso di navigazione venga gestito
+            super.onBackPressed()
+        }
+    }
+
 
 
 }

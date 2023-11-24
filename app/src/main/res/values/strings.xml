@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CablaggioService</string>
+    <string name="app_name">CableService</string>
     <string name="batteria_1">1 Tom 1 Timpano</string>
     <string name="batteria_2">2 Tom 1 Timpano</string>
     <string name="batteria_3">1 Tom 2 Timpano</string>
@@ -73,6 +73,14 @@
     <string name="tenendo_premuto_un_preset_si_potr_modificare_o_eliminare">Tenendo premuto un preset si potrà modificare o eliminare.</string>
     <string name="premendo_su_elimina_verr_eliminato_il_preset_premendo_su_modifica_si_aprir_la_schermata_per_modificare_il_preset">Schermata di riepilogo preset. Premendo su elimina verrà eliminato il preset. Premendo su modifica si aprirà la schermata per modificare il preset simile a quella per crearlo.</string>
     <string name="schermata_di_modifica_dentro_la_quale_possibile_cambiare_i_vecchi_dati_inseriti_aggiungere_una_nuova_riga_premendo_l_apposito_bottone_o_eliminare_una_riga_facendo_swipe_verso_destra_per_la_riga_che_si_vuole_eliminiare">Schermata di modifica dentro la quale è possibile cambiare i vecchi dati inseriti, aggiungere una nuova riga premendo l\'apposito bottone o eliminare una riga facendo swipe verso destra per la riga che si vuole eliminiare.</string>
+    <string name="https_github_com_dippanz">https://github.com/dippanz</string>
+    <string name="profilo_github">Profilo GitHub:\t\t</string>
+    <string name="creato_da_dippanz">Creato da: dippanz</string>
+    <string name="versione_dell_app_1_0_0">Versione dell\'app: 1.0.0</string>
+    <string name="contatti_emanuele110_tiscali_it">Contatti: emanuele110@tiscali.it</string>
+    <string name="applicazione_sviluppata_per_semplificare_la_creazione_di_channel_list_effettuando_operazioni_veloci">Applicazione sviluppata per semplificare la creazione di Channel List effettuando operazioni veloci.</string>
+    <string name="informazioni_su">Informazioni su CableService</string>
+    <string name="info_e_contatti">Info e contatti</string>
 
 
     <string-array name="batteria1String">

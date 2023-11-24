@@ -6,5 +6,6 @@
     <color name="trasparente">#00FFFFFF</color>
     <color name="bianco_panna">#FEFEFE</color>
     <color name="custom_button_background_color">#03A9F4</color>
-    <color name="parentTheme">#D06875ED</color>
+    <color name="parentTheme">#D14858FF</color>
+    <color name="launcher_color">#C2CCFB</color>
 </resources>
