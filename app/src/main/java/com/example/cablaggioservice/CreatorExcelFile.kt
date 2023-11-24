@@ -30,9 +30,6 @@ class CreatorExcelFile(private val context: Context, private val fileName: Strin
             val cell: Cell = headerRow.createCell(index)
             cell.setCellValue(header)
 
-            // Crea un nuovo stile per i bordi
-            val borderStyle = workbook.createCellStyle()
-
             // Aggiungi la formattazione per le celle dell'intestazione (grassetto, allineamento, dimensioni)
             val cellStyle = workbook.createCellStyle()
             val font = workbook.createFont()
@@ -49,7 +46,8 @@ class CreatorExcelFile(private val context: Context, private val fileName: Strin
 
         var rowNum = 1
         for (rowData in data) {
-            val row: Row = sheet.createRow(rowNum++)
+            val row: Row = sheet.createRow(rowNum)
+            rowNum++
 
             var cellNum = 0
             for (cellData in rowData) {
@@ -63,6 +61,7 @@ class CreatorExcelFile(private val context: Context, private val fileName: Strin
                 cellStyle.borderLeft = BorderStyle.THIN
                 cellStyle.borderRight = BorderStyle.THIN
                 cellStyle.borderTop = BorderStyle.THIN
+                cellStyle.alignment = HorizontalAlignment.GENERAL
 
                 if(cellNum == 1){
                     cellStyle.alignment = HorizontalAlignment.CENTER
@@ -78,7 +77,6 @@ class CreatorExcelFile(private val context: Context, private val fileName: Strin
 
                 cell.cellStyle = cellStyle
             }
-
         }
 
         for (columnIndex in headers.indices) {
@@ -94,8 +92,12 @@ class CreatorExcelFile(private val context: Context, private val fileName: Strin
                     maxWidthColumn = widthRow
                 }
             }
-
-            sheet.setColumnWidth(columnIndex, maxWidthColumn)
+            if(columnIndex == 1){
+                sheet.setColumnWidth(columnIndex, (maxWidthColumn * 1.3).toInt())
+            }else{
+                sheet.setColumnWidth(columnIndex, maxWidthColumn)
+            }
+            Log.i("msg", "columnIndex $columnIndex, maxWidthColumn $maxWidthColumn, widthColumn: ${sheet.getColumnWidth(columnIndex)}")
         }
 
         val fileOutputStream: FileOutputStream

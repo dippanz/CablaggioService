@@ -14,19 +14,23 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:src="@mipmap/ic_launcher_round"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:contentDescription="@string/image" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/informazioni_su"
-            android:textSize="20sp"
+            android:textSize="24sp"
+            android:textStyle="bold"
             android:layout_gravity="center"
             android:layout_marginTop="16dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="20sp"
             android:text="@string/applicazione_sviluppata_per_semplificare_la_creazione_di_channel_list_effettuando_operazioni_veloci"
             android:layout_marginTop="16dp"/>
 
@@ -34,15 +38,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/contatti_emanuele110_tiscali_it"
-            android:layout_marginTop="16dp"/>
+            android:linksClickable="true"
+            android:autoLink="email"
+            android:textSize="18sp"
+            android:layout_marginTop="16dp"
+            />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/versione_dell_app_1_0_0"
-            android:layout_marginTop="16dp"/>
-
-        <!-- Sezione sul creatore o sviluppatore -->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -54,6 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/profilo_github"
+                android:textSize="18sp"
                 android:layout_marginTop="8dp"/>
 
             <TextView
@@ -63,14 +65,31 @@
                 android:text="@string/https_github_com_dippanz"
                 android:linksClickable="true"
                 android:autoLink="web"
+                android:textSize="18sp"
+
                 android:layout_marginTop="8dp"/>
         </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="18sp"
             android:text="@string/creato_da_dippanz"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="@string/versione_dell_app_1_0_0"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="20dp"/>
+    </LinearLayout>
 
     </LinearLayout>
 </ScrollView>

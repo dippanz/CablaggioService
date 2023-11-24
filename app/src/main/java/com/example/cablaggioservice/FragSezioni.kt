@@ -800,7 +800,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
         tmpContainer.orientation = LinearLayout.HORIZONTAL
-        tmpContainer.setPadding(40,1,10,20)
+        tmpContainer.setPadding(50,1,10,30)
 
         //primo elemento della riga
         val layoutParams = LinearLayout.LayoutParams(
@@ -831,7 +831,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
             val radioGroup = RadioGroup(requireContext())
             radioGroup.id = View.generateViewId()
             radioGroup.orientation = LinearLayout.HORIZONTAL
-            radioGroup.setPadding(0,16,0,0)
+            radioGroup.setPadding(0,20,0,0)
 
             // Crea due RadioButton
             val radioButton1 = RadioButton(requireContext())
