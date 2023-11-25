@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.annotation.ArrayRes
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.example.cablaggioservice.databinding.ActivityMainBinding
@@ -31,57 +32,167 @@ class MainActivity : AppCompatActivity() {
         toolbar.title = ""
         setSupportActionBar(toolbar)
 
-        val t = supportFragmentManager.beginTransaction()
-        t.addToBackStack("principale")
-        t.replace(R.id.container_main, FragSezioni(), TAG_FRAGMENT_SEZIONI)
-        t.commit()
+        if(savedInstanceState == null) {
+            val t = supportFragmentManager.beginTransaction()
+            t.addToBackStack("principale")
+            t.replace(R.id.container_main, FragSezioni(), TAG_FRAGMENT_SEZIONI)
+            t.commit()
 
-        //creo gli sharedPreferences di default
-        val sharedPreferences = getSharedPreferences("preset", Context.MODE_PRIVATE)
-        val isFirstRun = sharedPreferences.getBoolean("isFirstRun", true)
+            //creo gli sharedPreferences di default
+            val sharedPreferences = getSharedPreferences("preset", Context.MODE_PRIVATE)
+            val isFirstRun = sharedPreferences.getBoolean("isFirstRun", true)
 
-        if (isFirstRun) {
-            val dbHelper = MyDatabaseHelper(applicationContext)
-            val db = dbHelper.writableDatabase
+            if (isFirstRun) {
+                val dbHelper = MyDatabaseHelper(applicationContext)
+                val db = dbHelper.writableDatabase
 
-            // Batteria
-            createAndSetJsonArray(db, R.array.batteria1String, generatePositiveUniqueId("batteria1"), R.string.batteria_1, R.id.group_batteria)
-            createAndSetJsonArray(db, R.array.batteria2String, generatePositiveUniqueId("batteria2"), R.string.batteria_2, R.id.group_batteria)
-            createAndSetJsonArray(db, R.array.batteria3String, generatePositiveUniqueId("batteria3"), R.string.batteria_3, R.id.group_batteria)
-            createAndSetJsonArray(db, R.array.batteria4String, generatePositiveUniqueId("batteria4"), R.string.batteria_4, R.id.group_batteria)
+                // Batteria
+                createAndSetJsonArray(
+                    db,
+                    R.array.batteria1String,
+                    generatePositiveUniqueId("batteria1"),
+                    R.string.batteria_1,
+                    R.id.group_batteria
+                )
+                createAndSetJsonArray(
+                    db,
+                    R.array.batteria2String,
+                    generatePositiveUniqueId("batteria2"),
+                    R.string.batteria_2,
+                    R.id.group_batteria
+                )
+                createAndSetJsonArray(
+                    db,
+                    R.array.batteria3String,
+                    generatePositiveUniqueId("batteria3"),
+                    R.string.batteria_3,
+                    R.id.group_batteria
+                )
+                createAndSetJsonArray(
+                    db,
+                    R.array.batteria4String,
+                    generatePositiveUniqueId("batteria4"),
+                    R.string.batteria_4,
+                    R.id.group_batteria
+                )
 
-            // Tastiera
-            createAndSetJsonArray(db, R.array.tastiera1String, generatePositiveUniqueId("tastiera1"), R.string.tastiera_1, R.id.group_tastiera)
-            createAndSetJsonArray(db, R.array.tastiera2String, generatePositiveUniqueId("tastiera2"), R.string.tastiera_2, R.id.group_tastiera)
-            createAndSetJsonArray(db, R.array.tastiera3String, generatePositiveUniqueId("tastiera3"), R.string.tastiera_3, R.id.group_tastiera)
-            createAndSetJsonArray(db, R.array.tastiera4String, generatePositiveUniqueId("tastiera4"), R.string.tastiera_4, R.id.group_tastiera)
-            createAndSetJsonArray(db, R.array.tastiera5String, generatePositiveUniqueId("tastiera5"), R.string.tastiera_5, R.id.group_tastiera)
-            createAndSetJsonArray(db, R.array.tastiera6String, generatePositiveUniqueId("tastiera6"), R.string.tastiera_6, R.id.group_tastiera)
-            createAndSetJsonArray(db, R.array.tastiera7String, generatePositiveUniqueId("tastiera7"), R.string.tastiera_7, R.id.group_tastiera)
-            createAndSetJsonArray(db, R.array.tastiera8String, generatePositiveUniqueId("tastiera8"), R.string.tastiera_8, R.id.group_tastiera)
-            createAndSetJsonArray(db, R.array.tastiera9String, generatePositiveUniqueId("tastiera9"), R.string.tastiera_9, R.id.group_tastiera)
-            createAndSetJsonArray(db, R.array.tastiera10String, generatePositiveUniqueId("tastiera10"), R.string.tastiera_10, R.id.group_tastiera)
+                // Tastiera
+                createAndSetJsonArray(
+                    db,
+                    R.array.tastiera1String,
+                    generatePositiveUniqueId("tastiera1"),
+                    R.string.tastiera_1,
+                    R.id.group_tastiera
+                )
+                createAndSetJsonArray(
+                    db,
+                    R.array.tastiera2String,
+                    generatePositiveUniqueId("tastiera2"),
+                    R.string.tastiera_2,
+                    R.id.group_tastiera
+                )
+                createAndSetJsonArray(
+                    db,
+                    R.array.tastiera3String,
+                    generatePositiveUniqueId("tastiera3"),
+                    R.string.tastiera_3,
+                    R.id.group_tastiera
+                )
+                createAndSetJsonArray(
+                    db,
+                    R.array.tastiera4String,
+                    generatePositiveUniqueId("tastiera4"),
+                    R.string.tastiera_4,
+                    R.id.group_tastiera
+                )
+                createAndSetJsonArray(
+                    db,
+                    R.array.tastiera5String,
+                    generatePositiveUniqueId("tastiera5"),
+                    R.string.tastiera_5,
+                    R.id.group_tastiera
+                )
+                createAndSetJsonArray(
+                    db,
+                    R.array.tastiera6String,
+                    generatePositiveUniqueId("tastiera6"),
+                    R.string.tastiera_6,
+                    R.id.group_tastiera
+                )
+                createAndSetJsonArray(
+                    db,
+                    R.array.tastiera7String,
+                    generatePositiveUniqueId("tastiera7"),
+                    R.string.tastiera_7,
+                    R.id.group_tastiera
+                )
+                createAndSetJsonArray(
+                    db,
+                    R.array.tastiera8String,
+                    generatePositiveUniqueId("tastiera8"),
+                    R.string.tastiera_8,
+                    R.id.group_tastiera
+                )
+                createAndSetJsonArray(
+                    db,
+                    R.array.tastiera9String,
+                    generatePositiveUniqueId("tastiera9"),
+                    R.string.tastiera_9,
+                    R.id.group_tastiera
+                )
+                createAndSetJsonArray(
+                    db,
+                    R.array.tastiera10String,
+                    generatePositiveUniqueId("tastiera10"),
+                    R.string.tastiera_10,
+                    R.id.group_tastiera
+                )
 
-            // Percussioni
-            createAndSetJsonArray(db, R.array.percussioni1String, generatePositiveUniqueId("percussioni1"), R.string.percussioni_1, R.id.group_percussioni)
+                // Percussioni
+                createAndSetJsonArray(
+                    db,
+                    R.array.percussioni1String,
+                    generatePositiveUniqueId("percussioni1"),
+                    R.string.percussioni_1,
+                    R.id.group_percussioni
+                )
 
-            // Chitarra
-            createAndSetJsonArray(db, R.array.chitarra1String, generatePositiveUniqueId("chitarra1"), R.string.chitarra_1, R.id.group_check_chitarra)
+                // Chitarra
+                createAndSetJsonArray(
+                    db,
+                    R.array.chitarra1String,
+                    generatePositiveUniqueId("chitarra1"),
+                    R.string.chitarra_1,
+                    R.id.group_check_chitarra
+                )
 
-            // Voci
-            createAndSetJsonArray(db, R.array.voci1String, generatePositiveUniqueId("voci1"), R.string.voci_1, R.id.group_voci)
+                // Voci
+                createAndSetJsonArray(
+                    db,
+                    R.array.voci1String,
+                    generatePositiveUniqueId("voci1"),
+                    R.string.voci_1,
+                    R.id.group_voci
+                )
 
-            // Cori
-            createAndSetJsonArray(db, R.array.cori1String, generatePositiveUniqueId("cori1"), R.string.cori_1, R.id.group_cori)
+                // Cori
+                createAndSetJsonArray(
+                    db,
+                    R.array.cori1String,
+                    generatePositiveUniqueId("cori1"),
+                    R.string.cori_1,
+                    R.id.group_cori
+                )
 
 
-            Log.i("msg", "applico dati iniziali predefiniti")
+                Log.i("msg", "applico dati iniziali predefiniti")
 
-            db.close()
+                db.close()
 
-            // Imposta isFirstRun a false per indicare che le preferenze sono state impostate
-            sharedPreferences.edit().putBoolean("isFirstRun", false).apply()
-            sharedPreferences.edit().putBoolean(getString(R.string.dimic_attivo), true).apply()
+                // Imposta isFirstRun a false per indicare che le preferenze sono state impostate
+                sharedPreferences.edit().putBoolean("isFirstRun", false).apply()
+                sharedPreferences.edit().putBoolean(getString(R.string.dimic_attivo), true).apply()
+            }
         }
     }
 
@@ -156,9 +267,9 @@ class MainActivity : AppCompatActivity() {
                 val aggiungi = if(supportFragmentManager.backStackEntryCount < 2) {
                     true
                 } else {
-                    val frag = supportFragmentManager.findFragmentByTag(TAG_FRAGMENT_CONTATTI)
+                    val frag = supportFragmentManager.findFragmentById(R.id.container_main)
 
-                    if(frag != null){
+                    if(frag is FragContatti){
                         supportFragmentManager.popBackStack()
                         true
                     } else {
@@ -169,7 +280,7 @@ class MainActivity : AppCompatActivity() {
                 if(aggiungi) {
                     val t = supportFragmentManager.beginTransaction()
                     t.addToBackStack(TAG_FRAGMENT_INFO)
-                    t.replace(R.id.container_main, FragInformazioni(), TAG_FRAGMENT_INFO)
+                    t.replace(R.id.container_main, FragInformazioni())
                     t.commit()
                 }
 
@@ -180,9 +291,9 @@ class MainActivity : AppCompatActivity() {
                 val aggiungi = if(supportFragmentManager.backStackEntryCount < 2) {
                     true
                 } else {
-                    val frag = supportFragmentManager.findFragmentByTag(TAG_FRAGMENT_INFO)
+                    val frag = supportFragmentManager.findFragmentById(R.id.container_main)
 
-                    if(frag != null){
+                    if(frag is FragInformazioni){
                         supportFragmentManager.popBackStack()
                         true
                     } else {
@@ -193,7 +304,7 @@ class MainActivity : AppCompatActivity() {
                 if(aggiungi) {
                     val t = supportFragmentManager.beginTransaction()
                     t.addToBackStack(TAG_FRAGMENT_CONTATTI)
-                    t.replace(R.id.container_main, FragContatti(), TAG_FRAGMENT_CONTATTI)
+                    t.replace(R.id.container_main, FragContatti())
                     t.commit()
                 }
 

@@ -10,11 +10,8 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
-import android.provider.ContactsContract.CommonDataKinds.StructuredName
-import android.text.Editable
 import android.text.InputFilter
 import android.text.InputType
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -373,8 +370,6 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
         }
     }
 
-
-
     private fun settingCheckBox(nomePreset: String, id: String): CheckBox{
         val checkBox = CheckBox(requireContext())
         checkBox.id = id.toInt()
@@ -426,172 +421,7 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
                 //creo stringa contenente array incolonnato
                 val wordList = createStringIncolonnata(stringArray)
 
-                //creo popup informativo
-                val alertDialogBuilder = AlertDialog.Builder(requireContext(), R.style.RoundedCornersDialog)
-                alertDialogBuilder.setTitle(getString(R.string.info_1s, dbmsBoundary.getNomePresetFromDB(view)))
-                alertDialogBuilder.setMessage(wordList)
-
-                alertDialogBuilder.setNeutralButton("Modifica"){ _, _ ->
-
-                    val dialogBuilder = Dialog(requireContext(), R.style.RoundedCornersDialog)
-                    dialogBuilder.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                    dialogBuilder.setCancelable(true)
-
-                    val rootView = LayoutInflater.from(requireContext()).inflate(R.layout.layout_dialog_modifica, null)
-                    dialogBuilder.setContentView(rootView)
-
-                    val titleEditText = rootView.findViewById<EditText>(R.id.textViewTitle)
-                    val filterArray = arrayOf<InputFilter>(InputFilter.LengthFilter(MAX_TITLE_PRESET))
-                    titleEditText.filters = filterArray
-                    titleEditText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
-                    titleEditText.hint = getString(R.string.modifica_preset_s_1, dbmsBoundary.getNomePresetFromDB(view))
-                    /*titleEditText.addTextChangedListener(object : TextWatcher {
-
-                        private val startText = titleEditText.text.toString().split(": ")[0] + ": "
-
-                        override fun beforeTextChanged(
-                            p0: CharSequence?,
-                            p1: Int,
-                            p2: Int,
-                            p3: Int
-                        ) {
-                            //Log.i("msg", startText)
-                        }
-
-                        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                            if (s != null) {
-                                if (s.endsWith(": ")) {
-                                    titleEditText.setSelection(s.indexOf(": ") + 2)
-                                }
-                            }
-                        }
-
-                        override fun afterTextChanged(editable: Editable?) {
-                            val text = editable.toString()
-
-                            if (!text.startsWith(startText)) {
-                                editable?.replace(0, editable.length, startText)
-
-                            }
-
-                            // Controlla se l'utente sta cercando di cancellare i due punti
-                            if (text == startText) {
-                                editable?.insert(startText.length, " ")
-                            }
-                        }
-                    })*/
-
-                    val editTextContainer = rootView.findViewById<LinearLayout>(R.id.container_editText)
-
-                    val wordListWithMICDI = createStringIncolonnata(stringArray, true)
-                    if(wordListWithMICDI.isNotEmpty()) {
-                        // Crea caselle di testo EditText in base al numero di parole nella lista
-                        for ( word in wordListWithMICDI.split("\n")) {
-                            addRowOnContainer(editTextContainer, word)
-                        }
-                    }
-
-                    val saveButton = rootView.findViewById<Button>(R.id.buttonSalva)
-                    val cancelButton = rootView.findViewById<Button>(R.id.buttonAnnulla)
-                    val addButton = rootView.findViewById<Button>(R.id.buttonAggiungi)
-
-                    saveButton.setOnClickListener {
-                        //prendo il nuovo nomePreset
-                        val nomePreset: String = titleEditText.text.toString().ifEmpty {
-                            titleEditText.hint.toString()
-                        }
-
-
-
-                        //salvo il nuovo nome del preset sia in locale che dinamicamente se diverso da quello precedente
-                        val titoloPreset: String = if(dbmsBoundary.getNomePresetFromDB(view) != nomePreset){
-                            if(view is RadioButton){
-                                view.text = nomePreset
-                            }else if(view is CheckBox){
-                                view.text = nomePreset
-                            }
-                            nomePreset
-                        }else{
-                            ""
-                        }
-
-                        val stringList = saveModifichePopup(editTextContainer)
-
-                        //controllo che il titolo o almeno un dato sia stato modificato
-                        if(stringList.isNotEmpty() && stringList != stringArray){
-                            Log.i("msg", "array diversi allora carico dati")
-                            //aggiorno dati nel db
-                            dbmsBoundary.updateDataOnDB(idStringArrayStrumento, titoloPreset, stringList)
-                        }else if(titoloPreset.isNotEmpty() && stringList.isNotEmpty()){
-                            Log.i("msg", "solo titolo diverso carico dati")
-                            dbmsBoundary.updateDataOnDB(idStringArrayStrumento, titoloPreset, listOf())
-                        }else{
-                            if(stringList.isEmpty()){
-                                Toast.makeText(requireContext(), "aggiungere valori mancanti", Toast.LENGTH_SHORT).show()
-                            }else{
-                                Toast.makeText(requireContext(), "non è stato cambiato nessun dato", Toast.LENGTH_SHORT).show()
-                            }
-
-                            return@setOnClickListener
-                        }
-
-                        dialogBuilder.dismiss()
-                    }
-
-                    cancelButton.setOnClickListener {
-                        dialogBuilder.dismiss() // Chiudi il Dialog senza salvare
-                    }
-
-                    addButton.setOnClickListener {
-                        addRowOnContainer(editTextContainer, getString(R.string.aggiungi_un_valore))
-                    }
-
-                    dialogBuilder.show()
-                }
-
-                alertDialogBuilder.setPositiveButton("Chiudi") { dialog, _ ->
-                    // Azioni da eseguire quando si fa clic su OK
-                    dialog.dismiss()
-                }
-
-                alertDialogBuilder.setNegativeButton("Elimina"){ _: DialogInterface, _: Int ->
-
-                    //creo popup informativo
-                    val alertConfirmElimination = AlertDialog.Builder(requireContext())
-                    alertConfirmElimination.setTitle("Conferma eliminazione")
-                        .setMessage(getString(R.string.sicuro_di_voler_eliminare, dbmsBoundary.getNomePresetFromDB(view)))
-                        .setNegativeButton("Annulla"){ dialog: DialogInterface, _: Int ->
-                            dialog.dismiss()
-                        }
-                        .setPositiveButton("Si"){ dialog: DialogInterface, _: Int ->
-                            //cancello view dinamicamente
-                            val parentPreset = view.parent
-                            parentPreset?.let {
-                                (it as? ViewGroup)?.removeView(view)
-                            }
-
-                            //cancello view dal db
-                            dbmsBoundary.deletePreset(view.id)
-
-                            dialog.dismiss()
-                        }.create().show()
-                }
-
-                val alertDialog = alertDialogBuilder.create()
-
-                // Ottieni i pulsanti dal dialog e applica lo stile personalizzato
-                alertDialog.setOnShowListener { dialog ->
-                    val positiveButton = (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
-                    val neutralButton = dialog.getButton(AlertDialog.BUTTON_NEUTRAL)
-                    val negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
-
-                    // Imposta il colore del testo dei pulsanti
-                    positiveButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.custom_button_background_color))
-                    negativeButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.custom_button_background_color))
-                    neutralButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.custom_button_background_color))
-
-                }
-                alertDialog.show()
+                createPopupPreset(wordList, view, stringArray, idStringArrayStrumento)
 
                 true
             }
@@ -599,6 +429,145 @@ class FragSezioni: Fragment(R.layout.frag_sezioni) {
         }else{
             Log.i("msg", "errore setOnLongClick radiogroup")
         }
+    }
+
+    private fun createPopupPreset(
+        wordList: String,
+        view: View,
+        stringArray: List<String>,
+        idStringArrayStrumento: String
+    ) {
+        //creo popup informativo
+        val alertDialogBuilder = AlertDialog.Builder(requireContext(), R.style.RoundedCornersDialog)
+        alertDialogBuilder.setTitle(getString(R.string.info_1s, dbmsBoundary.getNomePresetFromDB(view)))
+        alertDialogBuilder.setMessage(wordList)
+
+        alertDialogBuilder.setNeutralButton("Modifica"){ _, _ ->
+
+            val dialogBuilder = Dialog(requireContext(), R.style.RoundedCornersDialog)
+            dialogBuilder.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialogBuilder.setCancelable(true)
+
+            val rootView = LayoutInflater.from(requireContext()).inflate(R.layout.layout_dialog_modifica, null)
+            dialogBuilder.setContentView(rootView)
+
+            val titleEditText = rootView.findViewById<EditText>(R.id.textViewTitle)
+            val filterArray = arrayOf<InputFilter>(InputFilter.LengthFilter(MAX_TITLE_PRESET))
+            titleEditText.filters = filterArray
+            titleEditText.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
+            titleEditText.hint = getString(R.string.modifica_preset_s_1, dbmsBoundary.getNomePresetFromDB(view))
+
+            val editTextContainer = rootView.findViewById<LinearLayout>(R.id.container_editText)
+
+            val wordListWithMICDI = createStringIncolonnata(stringArray, true)
+            if(wordListWithMICDI.isNotEmpty()) {
+                // Crea caselle di testo EditText in base al numero di parole nella lista
+                for ( word in wordListWithMICDI.split("\n")) {
+                    addRowOnContainer(editTextContainer, word)
+                }
+            }
+
+            val saveButton = rootView.findViewById<Button>(R.id.buttonSalva)
+            val cancelButton = rootView.findViewById<Button>(R.id.buttonAnnulla)
+            val addButton = rootView.findViewById<Button>(R.id.buttonAggiungi)
+
+            saveButton.setOnClickListener {
+                //prendo il nuovo nomePreset
+                val nomePreset: String = titleEditText.text.toString().ifEmpty {
+                    titleEditText.hint.toString()
+                }
+
+
+
+                //salvo il nuovo nome del preset sia in locale che dinamicamente se diverso da quello precedente
+                val titoloPreset: String = if(dbmsBoundary.getNomePresetFromDB(view) != nomePreset){
+                    if(view is RadioButton){
+                        view.text = nomePreset
+                    }else if(view is CheckBox){
+                        view.text = nomePreset
+                    }
+                    nomePreset
+                }else{
+                    ""
+                }
+
+                val stringList = saveModifichePopup(editTextContainer)
+
+                //controllo che il titolo o almeno un dato sia stato modificato
+                if(stringList.isNotEmpty() && stringList != stringArray){
+                    Log.i("msg", "array diversi allora carico dati")
+                    //aggiorno dati nel db
+                    dbmsBoundary.updateDataOnDB(idStringArrayStrumento, titoloPreset, stringList)
+                }else if(titoloPreset.isNotEmpty() && stringList.isNotEmpty()){
+                    Log.i("msg", "solo titolo diverso carico dati")
+                    dbmsBoundary.updateDataOnDB(idStringArrayStrumento, titoloPreset, listOf())
+                }else{
+                    if(stringList.isEmpty()){
+                        Toast.makeText(requireContext(), "aggiungere valori mancanti", Toast.LENGTH_SHORT).show()
+                    }else{
+                        Toast.makeText(requireContext(), "non è stato cambiato nessun dato", Toast.LENGTH_SHORT).show()
+                    }
+
+                    return@setOnClickListener
+                }
+
+                dialogBuilder.dismiss()
+            }
+
+            cancelButton.setOnClickListener {
+                dialogBuilder.dismiss() // Chiudi il Dialog senza salvare
+            }
+
+            addButton.setOnClickListener {
+                addRowOnContainer(editTextContainer, getString(R.string.aggiungi_un_valore))
+            }
+
+            dialogBuilder.show()
+        }
+
+        alertDialogBuilder.setPositiveButton("Chiudi") { dialog, _ ->
+            // Azioni da eseguire quando si fa clic su OK
+            dialog.dismiss()
+        }
+
+        alertDialogBuilder.setNegativeButton("Elimina"){ _: DialogInterface, _: Int ->
+
+            //creo popup informativo
+            val alertConfirmElimination = AlertDialog.Builder(requireContext())
+            alertConfirmElimination.setTitle("Conferma eliminazione")
+                .setMessage(getString(R.string.sicuro_di_voler_eliminare, dbmsBoundary.getNomePresetFromDB(view)))
+                .setNegativeButton("Annulla"){ dialog: DialogInterface, _: Int ->
+                    dialog.dismiss()
+                }
+                .setPositiveButton("Si"){ dialog: DialogInterface, _: Int ->
+                    //cancello view dinamicamente
+                    val parentPreset = view.parent
+                    parentPreset?.let {
+                        (it as? ViewGroup)?.removeView(view)
+                    }
+
+                    //cancello view dal db
+                    dbmsBoundary.deletePreset(view.id)
+
+                    dialog.dismiss()
+                }.create().show()
+        }
+
+        val alertDialog = alertDialogBuilder.create()
+
+        // Ottieni i pulsanti dal dialog e applica lo stile personalizzato
+        alertDialog.setOnShowListener { dialog ->
+            val positiveButton = (dialog as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
+            val neutralButton = dialog.getButton(AlertDialog.BUTTON_NEUTRAL)
+            val negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+
+            // Imposta il colore del testo dei pulsanti
+            positiveButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.custom_button_background_color))
+            negativeButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.custom_button_background_color))
+            neutralButton.setTextColor(ContextCompat.getColor(requireContext(), R.color.custom_button_background_color))
+
+        }
+        alertDialog.show()
     }
 
     private fun saveModifichePopup(editTextContainer: LinearLayout): List<String>{
